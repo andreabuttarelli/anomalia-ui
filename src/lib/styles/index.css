@@ -1,0 +1,6 @@
+/* Single entry point: `import '@anomalia/ui/styles.css'`.
+   Import the three layers individually if you need to slot your own CSS
+   between them (e.g. your palette override after tokens, before theme). */
+@import './tokens.css';
+@import './theme.css';
+@import './base.css';

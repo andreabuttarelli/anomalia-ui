@@ -1,0 +1,163 @@
+/* Docs-site chrome only. Nothing here ships in the package — the library's own
+   styles live in `src/lib/styles/`.
+
+   The reset lives here rather than in the library: `base.css` deliberately only
+   touches elements the library rendered, so an app can drop the package in
+   without its own markup changing. Which means the app owns this line — and
+   without it, `width: 100%` plus padding on the shell overflows the viewport. */
+/* Self-hosted Inter, variable weight, latin + latin-ext only. The library names
+   the family in `--an-font-sans` but deliberately ships no font binary — a
+   design system that bundles fonts fights whatever the host app already loads.
+   Providing it is the app's job, and this is the app. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Geist Mono, variable weight, latin subset (23KB). Pairs with Inter without
+   the two looking like different sizes: the library normalises that at the point
+   of use with `font-size-adjust`, so nothing is corrected twice here. */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--an-bg);
+}
+
+.doc-page {
+  max-width: 860px;
+}
+
+.doc-page__eyebrow {
+  margin: 0 0 var(--an-space-2);
+  font-size: var(--an-text-caption-size);
+  font-weight: var(--an-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--an-accent);
+}
+
+.doc-page__title {
+  margin: 0;
+  font-size: var(--an-text-title-1-size);
+  line-height: var(--an-text-title-1-line);
+  letter-spacing: var(--an-text-title-1-track);
+  font-weight: var(--an-weight-bold);
+  color: var(--an-text);
+}
+
+.doc-page__lead {
+  margin: var(--an-space-3) 0 0;
+  font-size: var(--an-text-callout-size);
+  line-height: 1.6;
+  color: var(--an-text-muted);
+  max-width: 68ch;
+}
+
+.doc-section {
+  margin-top: var(--an-space-10);
+}
+
+.doc-section__title {
+  margin: 0 0 var(--an-space-4);
+  font-size: var(--an-text-title-3-size);
+  letter-spacing: var(--an-text-title-3-track);
+  font-weight: var(--an-weight-semibold);
+  color: var(--an-text);
+}
+
+.doc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--an-space-5);
+}
+
+.doc-notes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--an-space-2);
+}
+
+.doc-notes li {
+  position: relative;
+  padding-inline-start: var(--an-space-5);
+  font-size: var(--an-text-footnote-size);
+  line-height: 1.6;
+  color: var(--an-text-muted);
+}
+
+.doc-notes li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 6px;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--an-accent);
+}
+
+.doc-imports {
+  margin-top: var(--an-space-4);
+  padding: var(--an-space-3) var(--an-space-4);
+  border: 1px solid var(--an-border);
+  border-radius: var(--an-radius-md);
+  background: var(--an-surface-sunken);
+  font-family: var(--an-font-mono);
+  font-size: 12.5px;
+  color: var(--an-text-muted);
+  overflow-x: auto;
+}
+
+/* Demo helpers, shared by the example files. */
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--an-space-3);
+}
+
+.demo-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--an-space-4);
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--an-space-4);
+}

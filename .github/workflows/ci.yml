@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # `check` runs svelte-check *and* the contrast audit. The audit exits
+      # non-zero on a regression, which is the point: a colour pair that stops
+      # clearing WCAG fails the build rather than shipping and being noticed by
+      # a user a month later.
+      - name: Typecheck and audit contrast
+        run: npm run check
+
+      # publint verifies the published package actually resolves for consumers —
+      # the class of bug you otherwise find from a bug report after release.
+      - name: Build the package
+        run: npm run build
+
+      - name: Build the docs site
+        run: npm run build:docs
+
+      # The agent skill's reference is generated from the catalogue. If it is
+      # stale, the skill is documenting an API that no longer exists.
+      - name: Check the generated skill reference is current
+        run: |
+          npm run skill:reference
+          git diff --exit-code skills/ || {
+            echo "::error::skills/ is out of date — run 'npm run skill:reference' and commit."
+            exit 1
+          }

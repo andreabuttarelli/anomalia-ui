@@ -1,0 +1,382 @@
+/* ============================================================================
+   @anomalia/ui — semantic tokens (the theme layer)
+   ----------------------------------------------------------------------------
+   The only layer components read. Three ways to theme an app:
+
+     1. Override a semantic token  → `--an-accent: hotpink`
+     2. Swap the palette underneath → `--an-gray-900: …`
+     3. Force a mode               → `data-theme="dark"` on <html>
+
+   Dark mode follows the OS by default and is overridden by an explicit
+   `data-theme` attribute in either direction, so a consumer's theme toggle
+   wins over `prefers-color-scheme` without `!important` anywhere.
+
+   Two conventions carry most of the accessibility work:
+
+     • The interactive colour is ink (near-black on light, near-white on dark),
+       not a hue. Every control fill, focus ring and pressed state therefore
+       starts far above the 3:1 that SC 1.4.11 asks for, instead of fighting a
+       light brand tint for it.
+     • Lines are split in two. `--an-border` is the decorative hairline that
+       SC 1.4.11 exempts; `--an-border-control` bounds real controls and is dark
+       enough to clear 3:1. Putting the hairline on an input is the single most
+       common contrast failure in systems that look like this one, and keeping
+       the two names apart is what prevents it.
+
+   `scripts/contrast-audit.mjs` measures every pair below in both themes and
+   fails the build if one regresses.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ── Surfaces ──────────────────────────────────────────────────────────
+     The page and the things on it share one colour. A card is found by its
+     hairline, not by being a lighter rectangle — that flatness is the whole
+     mood, and it is why this system reads as quiet at a glance.
+
+         rail     #fafafa   chrome beside the page, one step back
+         bg       #ffffff   the page canvas
+         surface  #ffffff   cards, bars, inputs — flush with the page
+         raised   #ffffff   menus, dialogs — same colour, lifted by shadow
+         sunken   #f4f4f5   a well *inside* a surface
+
+     Only two things break the plane, and each earns it: something recessed
+     (a well, the rail) goes down a step, and something genuinely floating over
+     the page casts a shadow. Nothing rises by getting lighter. */
+  --an-bg: var(--an-gray-0);
+  --an-surface: var(--an-gray-0);
+  /* Was `--an-gray-50`, i.e. *darker* than the surface it sits above — the one
+     rung that ran the wrong way. Overlays lift with shadow here, not tone. */
+  --an-surface-raised: var(--an-gray-0);
+  --an-surface-sunken: var(--an-gray-100);
+  --an-surface-hover: var(--an-gray-100);
+  --an-surface-inverse: var(--an-gray-950);
+  /* Frosted chrome (nav bars, sheets). Turned opaque under reduced transparency. */
+  --an-surface-glass: color-mix(in srgb, var(--an-gray-0) 80%, transparent);
+  --an-glass-blur: saturate(140%) blur(16px);
+  /* The navigation rail. The one piece of chrome that steps back from the page,
+     because it sits beside the page rather than on it. */
+  --an-surface-rail: var(--an-gray-50);
+
+  /* ── Content ─────────────────────────────────────────────────────────── */
+  --an-text: var(--an-gray-950);
+  --an-text-muted: var(--an-gray-600);
+  /* Captions and placeholders are still text: this clears 4.5:1, not 3:1. */
+  --an-text-faint: var(--an-gray-500);
+  --an-text-inverse: var(--an-gray-0);
+
+  /* ── Lines ───────────────────────────────────────────────────────────── */
+  --an-border: var(--an-gray-200);
+  --an-border-strong: var(--an-gray-300);
+  --an-border-control: var(--an-gray-500);
+
+  /* ── Interactive (ink) ───────────────────────────────────────────────── */
+  --an-accent: var(--an-gray-950);
+  --an-accent-hover: var(--an-gray-800);
+  --an-accent-press: var(--an-gray-700);
+  --an-accent-soft: var(--an-gray-100);
+  --an-accent-soft-text: var(--an-gray-950);
+  --an-on-accent: var(--an-gray-0);
+  /* Separate names so a consumer can point the load-bearing ones at a hue
+     without having to re-check every control fill by hand. */
+  --an-accent-emphasis: var(--an-gray-950);
+  --an-on-accent-emphasis: var(--an-gray-0);
+  --an-accent-text: var(--an-gray-950);
+
+  /* ── Brand ───────────────────────────────────────────────────────────────
+     Deliberately not wired into any control. Reach for it when something should
+     feel like Anomalia rather than like a system component. */
+  --an-brand: var(--an-violet-400);
+  --an-brand-strong: var(--an-violet-600);
+  --an-brand-soft: var(--an-violet-50);
+  --an-brand-text: var(--an-violet-700);
+  --an-on-brand: var(--an-gray-950);
+
+  /* ── Status ──────────────────────────────────────────────────────────── */
+  --an-success: var(--an-green-600);
+  --an-success-soft: var(--an-green-100);
+  --an-warning: var(--an-amber-600);
+  --an-warning-soft: var(--an-amber-100);
+  --an-danger: var(--an-red-600);
+  --an-danger-soft: var(--an-red-100);
+  --an-info: var(--an-blue-600);
+  --an-info-soft: var(--an-blue-100);
+  --an-on-status: var(--an-gray-0);
+
+  /* ── Charts ────────────────────────────────────────────────────────────
+     A monochrome system still needs hues the moment a chart carries more than
+     one series, because colour is the only channel that encodes *identity*.
+     So: one series is ink, and hue appears only when there is something to
+     tell apart. That keeps the mood and still lets a stacked bar be read.
+
+     These six are a validated set, not a taste call — checked for the
+     lightness band, the chroma floor, adjacent-pair separation under
+     deuteranopia/protanopia/tritanopia, and normal-vision separation. The
+     ORDER is the safety mechanism: reassign a slot and the guarantee is void.
+     Worst adjacent CVD ΔE 9.1 light / 8.4 dark (target ≥ 8).
+
+     Three light slots sit under 3:1 on white (aqua, yellow, magenta). That is
+     allowed for a *mark* — it is not text — on the condition that identity is
+     also available without colour, which is why every multi-series chart here
+     ships a legend and a table view. */
+  --an-chart-1: #2a78d6;
+  --an-chart-2: #eb6834;
+  --an-chart-3: #1baf7a;
+  --an-chart-4: #eda100;
+  --an-chart-5: #e87ba4;
+  --an-chart-6: #4a3aa7;
+
+  /* Magnitude, not identity: one hue, light to dark. Achromatic here, because
+     "more ink" is the most literal reading of "more" and it keeps a heatmap
+     inside the system's own palette. The lightest step is allowed to sit close
+     to the surface — that end of the scale means "nearly nothing". */
+  --an-chart-seq-1: #f4f4f5;
+  --an-chart-seq-2: #e4e4e7;
+  --an-chart-seq-3: #d4d4d8;
+  --an-chart-seq-4: #a1a1aa;
+  --an-chart-seq-5: #71717a;
+  --an-chart-seq-6: #3f3f46;
+  --an-chart-seq-7: #18181b;
+
+  /* Grid and axis: one step off the surface, hairline, solid. Recessive by
+     construction — a grid you notice is a grid that is too heavy. */
+  --an-chart-grid: var(--an-gray-150);
+  --an-chart-axis: var(--an-gray-200);
+
+  /* ── Effects ─────────────────────────────────────────────────────────── */
+  --an-ring: var(--an-accent-emphasis);
+  --an-scrim: color-mix(in srgb, var(--an-gray-950) 50%, transparent);
+  --an-shadow-color: 240 6% 10%;
+
+  /* Elevation is close to flat: structure comes from hairlines and surface
+     steps, and shadow is reserved for things that genuinely float. */
+  --an-shadow-xs: 0 1px 1px hsl(var(--an-shadow-color) / 0.04);
+  --an-shadow-sm: 0 1px 2px hsl(var(--an-shadow-color) / 0.06);
+  --an-shadow-md: 0 2px 6px hsl(var(--an-shadow-color) / 0.07);
+  --an-shadow-lg:
+    0 2px 4px hsl(var(--an-shadow-color) / 0.05), 0 10px 24px hsl(var(--an-shadow-color) / 0.1);
+  --an-shadow-xl:
+    0 4px 8px hsl(var(--an-shadow-color) / 0.06), 0 24px 48px hsl(var(--an-shadow-color) / 0.14);
+}
+
+/* Dark is the system's home key: black canvas, near-white ink, borders doing
+   the structural work. The same values are applied by both selectors below —
+   an explicit `data-theme="dark"`, and the OS preference when the consumer has
+   not pinned light. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Same story, same order. The canvas and the cards share a colour here too:
+     a dark theme that lifts every card a shade lighter turns a page of cards
+     into a page of grey rectangles, which is the noise the light theme avoids.
+     Near-black is kept below for the rail and for wells, so "recessed" still
+     has somewhere to go. */
+  --an-bg: #0a0a0b;
+  --an-surface: #0a0a0b;
+  /* The one place dark has to diverge: a shadow over a near-black page is
+     invisible, so an overlay lifts with tone instead. Each theme uses the cue
+     it actually has. */
+  --an-surface-raised: #17171a;
+  --an-surface-sunken: #050506;
+  --an-surface-hover: #1c1c20;
+  --an-surface-inverse: var(--an-gray-100);
+  --an-surface-glass: color-mix(in srgb, #0a0a0b 76%, transparent);
+  /* One step back from the page, exactly as in light — read the other way. */
+  --an-surface-rail: #050506;
+
+  --an-text: #fafafa;
+  --an-text-muted: #a1a1aa;
+  --an-text-faint: #8b8b94;
+  --an-text-inverse: var(--an-gray-950);
+
+  --an-border: #232326;
+  --an-border-strong: #2f2f34;
+  --an-border-control: #7a7a85;
+
+  --an-accent: #fafafa;
+  --an-accent-hover: #ffffff;
+  --an-accent-press: var(--an-gray-300);
+  --an-accent-soft: #1c1c20;
+  --an-accent-soft-text: #fafafa;
+  --an-on-accent: var(--an-gray-950);
+  --an-accent-emphasis: #fafafa;
+  --an-on-accent-emphasis: var(--an-gray-950);
+  --an-accent-text: #fafafa;
+
+  --an-brand: var(--an-violet-400);
+  --an-brand-strong: var(--an-violet-300);
+  --an-brand-soft: color-mix(in srgb, var(--an-violet-400) 16%, transparent);
+  --an-brand-text: var(--an-violet-200);
+  --an-on-brand: var(--an-gray-950);
+
+  --an-success: #4ade80;
+  --an-success-soft: color-mix(in srgb, #4ade80 16%, transparent);
+  --an-warning: #fbbf24;
+  --an-warning-soft: color-mix(in srgb, #fbbf24 16%, transparent);
+  --an-danger: #f87171;
+  --an-danger-soft: color-mix(in srgb, #f87171 16%, transparent);
+  --an-info: #7cb2fb;
+  --an-info-soft: color-mix(in srgb, #7cb2fb 16%, transparent);
+  --an-on-status: var(--an-gray-950);
+
+  /* The same six hues re-stepped for a near-black surface — a selected dark
+     palette, not an automatic flip. All six clear 3:1 here, and the worst
+     adjacent CVD pair is ΔE 8.4. */
+  --an-chart-1: #3987e5;
+  --an-chart-2: #d95926;
+  --an-chart-3: #199e70;
+  --an-chart-4: #c98500;
+  --an-chart-5: #d55181;
+  --an-chart-6: #9085e9;
+
+  /* Sequential runs the other way here: near-zero is the step closest to the
+     surface, so the ramp climbs towards light instead of towards ink. */
+  --an-chart-seq-1: #17171a;
+  --an-chart-seq-2: #232326;
+  --an-chart-seq-3: #3f3f46;
+  --an-chart-seq-4: #52525b;
+  --an-chart-seq-5: #8b8b94;
+  --an-chart-seq-6: #c4c4cc;
+  --an-chart-seq-7: #fafafa;
+
+  --an-chart-grid: #1c1c20;
+  --an-chart-axis: #232326;
+
+  --an-scrim: color-mix(in srgb, #000 68%, transparent);
+  --an-shadow-color: 0 0% 0%;
+  --an-shadow-xs: 0 1px 1px hsl(var(--an-shadow-color) / 0.5);
+  --an-shadow-sm: 0 1px 2px hsl(var(--an-shadow-color) / 0.55);
+  --an-shadow-md: 0 2px 6px hsl(var(--an-shadow-color) / 0.6);
+  --an-shadow-lg:
+    0 2px 4px hsl(var(--an-shadow-color) / 0.5), 0 10px 24px hsl(var(--an-shadow-color) / 0.65);
+  --an-shadow-xl:
+    0 4px 8px hsl(var(--an-shadow-color) / 0.55), 0 24px 48px hsl(var(--an-shadow-color) / 0.75);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --an-bg: #0a0a0b;
+    --an-surface: #0a0a0b;
+    --an-surface-raised: #17171a;
+    --an-surface-sunken: #050506;
+    --an-surface-hover: #1c1c20;
+    --an-surface-inverse: var(--an-gray-100);
+    --an-surface-glass: color-mix(in srgb, #0a0a0b 76%, transparent);
+    --an-surface-rail: #050506;
+
+    --an-text: #fafafa;
+    --an-text-muted: #a1a1aa;
+    --an-text-faint: #8b8b94;
+    --an-text-inverse: var(--an-gray-950);
+
+    --an-border: #232326;
+    --an-border-strong: #2f2f34;
+    --an-border-control: #7a7a85;
+
+    --an-accent: #fafafa;
+    --an-accent-hover: #ffffff;
+    --an-accent-press: var(--an-gray-300);
+    --an-accent-soft: #1c1c20;
+    --an-accent-soft-text: #fafafa;
+    --an-on-accent: var(--an-gray-950);
+    --an-accent-emphasis: #fafafa;
+    --an-on-accent-emphasis: var(--an-gray-950);
+    --an-accent-text: #fafafa;
+
+    --an-brand: var(--an-violet-400);
+    --an-brand-strong: var(--an-violet-300);
+    --an-brand-soft: color-mix(in srgb, var(--an-violet-400) 16%, transparent);
+    --an-brand-text: var(--an-violet-200);
+    --an-on-brand: var(--an-gray-950);
+
+    --an-success: #4ade80;
+    --an-success-soft: color-mix(in srgb, #4ade80 16%, transparent);
+    --an-warning: #fbbf24;
+    --an-warning-soft: color-mix(in srgb, #fbbf24 16%, transparent);
+    --an-danger: #f87171;
+    --an-danger-soft: color-mix(in srgb, #f87171 16%, transparent);
+    --an-info: #7cb2fb;
+    --an-info-soft: color-mix(in srgb, #7cb2fb 16%, transparent);
+    --an-on-status: var(--an-gray-950);
+
+    /* The same six hues re-stepped for a near-black surface — a selected dark
+       palette, not an automatic flip. All six clear 3:1 here, and the worst
+       adjacent CVD pair is ΔE 8.4. */
+    --an-chart-1: #3987e5;
+    --an-chart-2: #d95926;
+    --an-chart-3: #199e70;
+    --an-chart-4: #c98500;
+    --an-chart-5: #d55181;
+    --an-chart-6: #9085e9;
+
+    /* Sequential runs the other way here: near-zero is the step closest to the
+       surface, so the ramp climbs towards light instead of towards ink. */
+    --an-chart-seq-1: #17171a;
+    --an-chart-seq-2: #232326;
+    --an-chart-seq-3: #3f3f46;
+    --an-chart-seq-4: #52525b;
+    --an-chart-seq-5: #8b8b94;
+    --an-chart-seq-6: #c4c4cc;
+    --an-chart-seq-7: #fafafa;
+
+    --an-chart-grid: #1c1c20;
+    --an-chart-axis: #232326;
+
+    --an-scrim: color-mix(in srgb, #000 68%, transparent);
+    --an-shadow-color: 0 0% 0%;
+    --an-shadow-xs: 0 1px 1px hsl(var(--an-shadow-color) / 0.5);
+    --an-shadow-sm: 0 1px 2px hsl(var(--an-shadow-color) / 0.55);
+    --an-shadow-md: 0 2px 6px hsl(var(--an-shadow-color) / 0.6);
+    --an-shadow-lg:
+      0 2px 4px hsl(var(--an-shadow-color) / 0.5), 0 10px 24px hsl(var(--an-shadow-color) / 0.65);
+    --an-shadow-xl:
+      0 4px 8px hsl(var(--an-shadow-color) / 0.55), 0 24px 48px hsl(var(--an-shadow-color) / 0.75);
+  }
+}
+
+/* ── User preferences ──────────────────────────────────────────────────────
+   Two OS-level requests answered at the token layer, so every component
+   inherits the response without knowing about it. (Reduced motion is handled
+   in `base.css`, where the transitions live.) */
+
+/* "Increase contrast": lines become ink, muted text stops being muted. */
+@media (prefers-contrast: more) {
+  :root {
+    --an-border: var(--an-gray-500);
+    --an-border-strong: var(--an-gray-700);
+    --an-border-control: var(--an-gray-900);
+    --an-text-muted: var(--an-gray-800);
+    --an-text-faint: var(--an-gray-700);
+    --an-state-hover: 0.12;
+    --an-state-press: 0.2;
+  }
+
+  :root[data-theme='dark'] {
+    --an-border: #6a6a74;
+    --an-border-strong: #8b8b94;
+    --an-border-control: #d4d4d8;
+    --an-text-muted: #e4e4e7;
+    --an-text-faint: #c9c9d1;
+  }
+}
+
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --an-border: #6a6a74;
+    --an-border-strong: #8b8b94;
+    --an-border-control: #d4d4d8;
+    --an-text-muted: #e4e4e7;
+    --an-text-faint: #c9c9d1;
+  }
+}
+
+/* "Reduce transparency": frosted chrome becomes opaque instead of blurred. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --an-surface-glass: var(--an-surface);
+    --an-glass-blur: none;
+  }
+}

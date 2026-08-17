@@ -1,0 +1,222 @@
+/* ============================================================================
+   @anomalia/ui — primitive tokens
+   ----------------------------------------------------------------------------
+   Raw, theme-agnostic values. Nothing here knows about light/dark: that mapping
+   lives in `theme.css`. Components never reference these directly — they read
+   the semantic tokens, so a consumer can restyle the whole system by overriding
+   one layer instead of hunting through components.
+
+   The palette is deliberately near-monochrome. In this system colour is
+   information, not decoration: greys carry structure, the single brand hue is
+   reserved for moments that earn it, and status hues appear only when something
+   has a state. That is what keeps a dense technical UI calm — and it happens to
+   make contrast easy, because ink on paper starts at 17:1 instead of 2:1.
+
+   Every custom property is namespaced `--an-*` so it can be dropped into an app
+   that already owns `--accent`, `--line`, `--radius`… without a collision.
+   ========================================================================= */
+
+:root {
+  /* ── Palette · neutrals ──────────────────────────────────────────────────
+     A cold, slightly blue-shifted grey ramp. Warm greys read "document";
+     cold greys read "instrument", which is the register this system wants. */
+  --an-gray-0: #ffffff;
+  --an-gray-25: #fcfcfd;
+  --an-gray-50: #fafafa;
+  --an-gray-100: #f4f4f5;
+  --an-gray-150: #ededee;
+  --an-gray-200: #e4e4e7;
+  --an-gray-300: #d4d4d8;
+  --an-gray-400: #a1a1aa;
+  --an-gray-500: #71717a;
+  --an-gray-600: #52525b;
+  --an-gray-700: #3f3f46;
+  --an-gray-800: #27272a;
+  --an-gray-900: #18181b;
+  --an-gray-950: #09090b;
+  --an-gray-1000: #000000;
+
+  /* ── Palette · brand ─────────────────────────────────────────────────────
+     Anomalia's violet, kept for the few places that should feel branded rather
+     than structural. It is never the default for a control. */
+  --an-violet-50: #f8f1ff;
+  --an-violet-100: #efe1ff;
+  --an-violet-200: #e0c8ff;
+  --an-violet-300: #cfa8ff;
+  --an-violet-400: #c485fe;
+  --an-violet-500: #b268f7;
+  --an-violet-600: #9a4de4;
+  --an-violet-700: #7c3bbb;
+  --an-violet-800: #5d2c8c;
+  --an-violet-900: #3d1d5c;
+
+  /* ── Palette · status ────────────────────────────────────────────────────
+     Desaturated and dark enough that each one clears 4.5:1 both as text on
+     paper and as a fill under white text. */
+  --an-green-100: #dcfce7;
+  --an-green-400: #4ade80;
+  --an-green-600: #15803d;
+  --an-green-900: #0b3f20;
+
+  --an-amber-100: #fef3c7;
+  --an-amber-400: #fbbf24;
+  --an-amber-600: #92600a;
+  --an-amber-900: #422f06;
+
+  --an-red-100: #fee2e2;
+  --an-red-400: #f87171;
+  --an-red-600: #b91c1c;
+  --an-red-900: #450f0f;
+
+  --an-blue-100: #dbeafe;
+  --an-blue-400: #60a5fa;
+  --an-blue-600: #1d4ed8;
+  --an-blue-900: #16265e;
+
+  /* ── Typography ──────────────────────────────────────────────────────────
+     One family, wide weight range. Headings run tight and slightly heavy;
+     labels run small, uppercase and widely tracked — the technical register
+     that reads as instrumentation rather than marketing. */
+  --an-font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  /* The second voice of the system. Mono is not "the code font" here — it is
+     the font of machine-authored fact: ids, paths, timestamps, shortcuts, spec
+     values. Named, never bundled; the app provides the file, as with Inter. */
+  --an-font-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  /* Two families set at the same px rarely look the same size, because their
+     x-heights differ — and which mono actually resolves depends on the OS when
+     the named one is missing. `font-size-adjust` fixes that at the point of use
+     instead: it scales whatever font resolves until its x-height matches this
+     ratio, which is Inter's own (measured: 110/200 at 200px). So mono lines up
+     with the sans next to it on every platform, loaded font or fallback. */
+  --an-font-mono-adjust: 0.55;
+
+  /* Labels: small, uppercase, widely tracked. */
+  --an-text-caption-size: 0.6875rem; /* 11 */
+  --an-text-caption-line: 1.3;
+  --an-text-caption-track: 0.1em;
+
+  --an-text-footnote-size: 0.8125rem; /* 13 */
+  --an-text-footnote-line: 1.45;
+  --an-text-footnote-track: -0.002em;
+
+  --an-text-body-size: 0.9375rem; /* 15 */
+  --an-text-body-line: 1.6;
+  --an-text-body-track: -0.008em;
+
+  --an-text-callout-size: 1rem; /* 16 */
+  --an-text-callout-line: 1.55;
+  --an-text-callout-track: -0.012em;
+
+  --an-text-headline-size: 1.0625rem; /* 17 */
+  --an-text-headline-line: 1.4;
+  --an-text-headline-track: -0.018em;
+
+  --an-text-title-3-size: 1.25rem; /* 20 */
+  --an-text-title-3-line: 1.3;
+  --an-text-title-3-track: -0.022em;
+
+  --an-text-title-2-size: 1.5rem; /* 24 */
+  --an-text-title-2-line: 1.22;
+  --an-text-title-2-track: -0.026em;
+
+  --an-text-title-1-size: 1.9375rem; /* 31 */
+  --an-text-title-1-line: 1.14;
+  --an-text-title-1-track: -0.03em;
+
+  --an-text-display-size: 2.75rem; /* 44 */
+  --an-text-display-line: 1.04;
+  --an-text-display-track: -0.038em;
+
+  --an-weight-regular: 400;
+  --an-weight-medium: 500;
+  --an-weight-semibold: 600;
+  --an-weight-bold: 700;
+
+  /* ── Space · 4px base ────────────────────────────────────────────────────── */
+  --an-space-0: 0px;
+  --an-space-1: 0.25rem;
+  --an-space-2: 0.5rem;
+  --an-space-3: 0.75rem;
+  --an-space-4: 1rem;
+  --an-space-5: 1.25rem;
+  --an-space-6: 1.5rem;
+  --an-space-8: 2rem;
+  --an-space-10: 2.5rem;
+  --an-space-12: 3rem;
+  --an-space-16: 4rem;
+  --an-space-20: 5rem;
+
+  /* ── Radius ──────────────────────────────────────────────────────────────
+     Tight. A 14px radius reads friendly-consumer; 4–8px reads engineered.
+     `--an-radius-full` still exists for the few genuinely round things
+     (avatars, switch thumbs, status dots). */
+  --an-radius-xs: 2px;
+  --an-radius-sm: 4px;
+  --an-radius-md: 6px;
+  --an-radius-lg: 8px;
+  --an-radius-xl: 12px;
+  --an-radius-2xl: 16px;
+  --an-radius-full: 9999px;
+
+  /* ── Controls · touch targets ────────────────────────────────────────────── */
+  --an-control-h-sm: 30px;
+  --an-control-h-md: 38px;
+  --an-control-h-lg: 46px;
+  /* Minimum hit area — the larger of Apple's 44pt and Material's 48dp rules. */
+  --an-tap-target: 44px;
+  --an-focus-ring-width: 2px;
+  --an-focus-ring-offset: 2px;
+
+  /* ── Motion · Material 3 duration scale ──────────────────────────────────── */
+  --an-duration-short-1: 50ms;
+  --an-duration-short-2: 100ms;
+  --an-duration-short-3: 150ms;
+  --an-duration-short-4: 200ms;
+  --an-duration-medium-1: 250ms;
+  --an-duration-medium-2: 300ms;
+  --an-duration-medium-3: 350ms;
+  --an-duration-medium-4: 400ms;
+  --an-duration-long-1: 450ms;
+  --an-duration-long-2: 500ms;
+  --an-duration-long-3: 550ms;
+  --an-duration-long-4: 600ms;
+
+  /* ── Motion · Material 3 easing set ──────────────────────────────────────── */
+  --an-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --an-ease-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --an-ease-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  /* Emphasized is the expressive default: slow start, fast middle, soft landing. */
+  --an-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --an-ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --an-ease-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  /* Overshoot for toggles/switches — the one place a spring reads as tactile. */
+  --an-ease-spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+
+  /* ── Motion · state layers (Material) ────────────────────────────────────
+     The surfaces are quiet, so the state layers do the talking. These are the
+     Material opacities, nudged up slightly because a monochrome UI gives them
+     less colour to work with. */
+  --an-state-hover: 0.07;
+  --an-state-focus: 0.1;
+  --an-state-press: 0.14;
+  --an-state-drag: 0.16;
+  --an-state-selected: 0.1;
+  --an-disabled-content: 0.4;
+  --an-disabled-container: 0.12;
+  --an-ripple-opacity: 0.14;
+  /* How far a control squishes under a finger (Apple-style press feedback). */
+  --an-press-scale: 0.97;
+
+  /* ── Layering ────────────────────────────────────────────────────────────── */
+  --an-z-base: 0;
+  --an-z-sticky: 100;
+  --an-z-dropdown: 1000;
+  --an-z-overlay: 1100;
+  --an-z-modal: 1200;
+  --an-z-popover: 1300;
+  --an-z-toast: 1400;
+  --an-z-tooltip: 1500;
+}

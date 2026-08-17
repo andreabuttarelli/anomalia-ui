@@ -1,0 +1,64 @@
+/* ============================================================================
+   @anomalia/ui — Tailwind v4 bridge (optional)
+   ----------------------------------------------------------------------------
+   The components need no Tailwind at all. This file is for apps that DO use
+   Tailwind and want their own markup to reach for the same tokens:
+   `bg-an-surface`, `text-an-muted`, `rounded-an-lg`, `ease-an-emphasized`…
+
+   Usage, after `@import 'tailwindcss'` in your app CSS:
+
+       @import '@anomalia/ui/styles.css';
+       @import '@anomalia/ui/tailwind.css';
+
+   `@theme inline` keeps the generated utilities pointing at the live custom
+   properties, so they flip with dark mode instead of baking a hex at build time.
+   ========================================================================= */
+
+@theme inline {
+  --color-an-bg: var(--an-bg);
+  --color-an-surface: var(--an-surface);
+  --color-an-surface-raised: var(--an-surface-raised);
+  --color-an-surface-sunken: var(--an-surface-sunken);
+  --color-an-surface-hover: var(--an-surface-hover);
+  --color-an-surface-inverse: var(--an-surface-inverse);
+
+  --color-an-text: var(--an-text);
+  --color-an-muted: var(--an-text-muted);
+  --color-an-faint: var(--an-text-faint);
+  --color-an-inverse: var(--an-text-inverse);
+
+  --color-an-border: var(--an-border);
+  --color-an-border-strong: var(--an-border-strong);
+
+  --color-an-accent: var(--an-accent);
+  --color-an-accent-hover: var(--an-accent-hover);
+  --color-an-accent-soft: var(--an-accent-soft);
+  --color-an-on-accent: var(--an-on-accent);
+
+  --color-an-success: var(--an-success);
+  --color-an-warning: var(--an-warning);
+  --color-an-danger: var(--an-danger);
+  --color-an-info: var(--an-info);
+
+  --radius-an-xs: var(--an-radius-xs);
+  --radius-an-sm: var(--an-radius-sm);
+  --radius-an-md: var(--an-radius-md);
+  --radius-an-lg: var(--an-radius-lg);
+  --radius-an-xl: var(--an-radius-xl);
+  --radius-an-2xl: var(--an-radius-2xl);
+
+  --shadow-an-xs: var(--an-shadow-xs);
+  --shadow-an-sm: var(--an-shadow-sm);
+  --shadow-an-md: var(--an-shadow-md);
+  --shadow-an-lg: var(--an-shadow-lg);
+  --shadow-an-xl: var(--an-shadow-xl);
+
+  --font-an-sans: var(--an-font-sans);
+  --font-an-mono: var(--an-font-mono);
+
+  --ease-an-standard: var(--an-ease-standard);
+  --ease-an-emphasized: var(--an-ease-emphasized);
+  --ease-an-emphasized-decelerate: var(--an-ease-emphasized-decelerate);
+  --ease-an-emphasized-accelerate: var(--an-ease-emphasized-accelerate);
+  --ease-an-spring: var(--an-ease-spring);
+}

@@ -1,0 +1,157 @@
+/* ============================================================================
+   @anomalia/ui — base layer
+   ----------------------------------------------------------------------------
+   Deliberately NOT a reset. The host app owns the document; this file only
+   touches elements the library rendered, which all carry a `data-an` attribute.
+   Dropping the library into an app with its own reset (or Tailwind preflight)
+   can therefore never change how the app's own markup looks.
+
+   The one global opt-in is `.an-app`, for consumers who want the canvas,
+   typography and text rendering applied to a whole page or subtree.
+   ========================================================================= */
+
+[data-an] {
+  box-sizing: border-box;
+  /* Material's touch feedback is drawn by the ripple, so kill the browser's. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-an] *,
+[data-an] *::before,
+[data-an] *::after {
+  box-sizing: border-box;
+}
+
+/* Interactive roots opt out of double-tap zoom delay and text selection drag,
+   the two things that make a web control feel un-native under a finger. */
+[data-an][data-an-interactive] {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Focus ────────────────────────────────────────────────────────────────
+   `:focus-visible` only, so a mouse click never leaves a ring behind, but every
+   keyboard user always gets one. The ring is `--an-ring` (ink), which clears
+   SC 1.4.11's 3:1 against every surface in the system, and it is drawn with an
+   offset so it stays legible on a filled control. */
+[data-an] :is(a, button, [role='button'], [tabindex]):focus-visible,
+[data-an]:focus-visible {
+  outline: var(--an-focus-ring-width) solid var(--an-ring);
+  outline-offset: var(--an-focus-ring-offset);
+  /* An inner white/black hairline keeps the ring visible when the control's own
+     fill happens to match it (ink button in light mode, for instance). */
+  box-shadow: 0 0 0 var(--an-focus-ring-offset) var(--an-surface);
+}
+
+[data-an] ::selection {
+  background: color-mix(in srgb, var(--an-accent) 22%, transparent);
+}
+
+/* ── Forced colours (Windows High Contrast) ───────────────────────────────
+   The OS replaces every colour with its own palette, which erases anything
+   drawn with `background` alone: pill indicators, state layers, ripples, the
+   filled half of a slider. Where a shape carries meaning, it gets a border in
+   a system colour so it survives the substitution. */
+@media (forced-colors: active) {
+  [data-an] :is(a, button, [role='button'], [tabindex]):focus-visible,
+  [data-an]:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+
+  /* Borders that were hairlines become real, visible boundaries. */
+  [data-an='card'],
+  [data-an='dialog'],
+  [data-an='bottom-sheet'],
+  [data-an='popover'],
+  [data-an='menu'],
+  [data-an='toast'],
+  [data-an='alert'],
+  [data-an='text-field'],
+  [data-an='textarea'],
+  [data-an='select'],
+  [data-an='chip'],
+  [data-an='segmented'] {
+    border: 1px solid CanvasText;
+  }
+
+  /* Selected/checked states are conveyed by fill in normal mode; in forced
+     colours the fill is flattened, so add an outline that cannot be. */
+  [data-an][data-selected],
+  [data-an][aria-selected='true'],
+  [data-an][aria-current='page'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  /* State layers and ripples are pure decoration here — hide them rather than
+     let them paint an opaque block over the text. */
+  [data-an] .an-ripple-layer {
+    display: none;
+  }
+}
+
+/* ── Opt-in page shell ────────────────────────────────────────────────────── */
+.an-app {
+  background: var(--an-bg);
+  color: var(--an-text);
+  font-family: var(--an-font-sans);
+  font-size: var(--an-text-body-size);
+  line-height: var(--an-text-body-line);
+  letter-spacing: var(--an-text-body-track);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Overscroll on iOS should not reveal a white gap under a dark canvas. */
+  overscroll-behavior-y: none;
+}
+
+/* Visually hidden but reachable by assistive tech. */
+.an-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hidden until focused — the skip link pattern. */
+.an-sr-only--focusable:focus-visible,
+.an-sr-only--focusable:focus {
+  position: fixed;
+  top: var(--an-space-3);
+  left: var(--an-space-3);
+  z-index: var(--an-z-tooltip);
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: var(--an-space-2) var(--an-space-4);
+  clip-path: none;
+  background: var(--an-accent);
+  color: var(--an-on-accent);
+  border-radius: var(--an-radius-md);
+  box-shadow: var(--an-shadow-lg);
+  font-family: var(--an-font-sans);
+  font-size: var(--an-text-footnote-size);
+  font-weight: var(--an-weight-medium);
+  text-decoration: none;
+}
+
+/* Motion is decoration, never information: strip it when asked, everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  [data-an],
+  [data-an] *,
+  [data-an] *::before,
+  [data-an] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,5 @@
+# Everything here is documentation meant to be found.
+User-agent: *
+Allow: /
+
+Sitemap: https://ui.anomalia.so/sitemap.xml
