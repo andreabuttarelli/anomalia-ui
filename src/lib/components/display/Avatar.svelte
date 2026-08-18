@@ -89,8 +89,17 @@
     font-weight: var(--an-weight-semibold);
     font-size: calc(var(--an-avatar-size, 40px) * 0.36);
     letter-spacing: 0.01em;
-    overflow: hidden;
     user-select: none;
+  }
+
+  /* Clipping lives on the children, not on the avatar. `overflow: hidden` here
+     would round the image *and* amputate the status dot, which is positioned at
+     the corner precisely so it overhangs the circle — the ring around it needs
+     to sit outside the silhouette to read as a separate mark rather than as a
+     bite taken out of the photo. The background is already clipped by
+     `border-radius` with no overflow rule at all. */
+  .an-avatar > :not(.an-avatar__status) {
+    border-radius: inherit;
   }
 
   :global([data-theme='dark']) .an-avatar {

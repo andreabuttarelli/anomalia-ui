@@ -8,6 +8,7 @@
 
   import { page } from '$app/stores';
   import { ThemeProvider, ThemeToggle, Toaster, IconButton, Badge, SkipLink } from '$lib/index.js';
+  import { lockScroll } from '$lib/actions/scroll-lock.js';
   import { groupedComponents } from '../docs/registry.js';
 
   let { children } = $props();
@@ -21,6 +22,16 @@
   $effect(() => {
     void current;
     navOpen = false;
+  });
+
+  /* Freeze the page while the drawer is open. Without this the touch drags the
+     document underneath instead of the drawer — the drawer is `position: fixed`,
+     so it does not participate in the page's scroll, and every gesture that
+     does not land exactly on its scrollable inner list leaks through to the
+     body. Released on close and on unmount both. */
+  $effect(() => {
+    if (!navOpen) return;
+    return lockScroll();
   });
 </script>
 
@@ -221,19 +232,33 @@
     padding-inline: var(--an-space-4);
   }
 
+  /* The sticky element and the scroll container are deliberately two different
+     elements. An element that is both — `position: sticky` *and* `overflow-y:
+     auto` — scrolls in Chromium and silently refuses to in Safari, which is how
+     a nav that tests fine ends up unreachable below the fold for half the
+     people using it. The wrapper sticks; the inner list scrolls. */
   .shell__nav {
     position: sticky;
-    top: 56px;
+    top: 57px;
     align-self: start;
-    max-height: calc(100dvh - 56px);
-    overflow-y: auto;
-    padding: var(--an-space-6) 0 var(--an-space-10);
+    display: flex;
+    max-height: calc(100dvh - 57px);
   }
 
   .shell__nav-inner {
     display: flex;
     flex-direction: column;
     gap: 1px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    /* Reaching the end of the nav must not start scrolling the page under it. */
+    overscroll-behavior: contain;
+    padding: var(--an-space-6) 0 var(--an-space-10);
+    /* Visible rather than overlay: with ~1800px of links in a 240px column, an
+       invisible scrollbar is indistinguishable from a nav that cannot scroll. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--an-border-strong) transparent;
   }
 
   .shell__group {
@@ -297,11 +322,18 @@
     /* The sidebar becomes a drawer that slides in on the emphasized curve. */
     .shell__nav {
       position: fixed;
-      inset: 56px auto 0 0;
+      top: 56px;
+      left: 0;
       z-index: 30;
       width: 268px;
+      /* An explicit height, not `bottom: 0`. The nav is still a grid item of
+         `.shell__body`, and `align-self: start` from the desktop rule wins over
+         the bottom edge — so the drawer sized itself to the whole *page*
+         (2498px) instead of the viewport, which left its inner list with
+         nothing to scroll and every gesture falling through to the document. */
+      align-self: stretch;
+      height: calc(100dvh - 56px);
       max-height: none;
-      padding: var(--an-space-4) var(--an-space-3);
       background: var(--an-surface);
       border-right: 1px solid var(--an-border);
       translate: -100% 0;
@@ -313,10 +345,22 @@
       box-shadow: var(--an-shadow-xl);
     }
 
+    .shell__nav-inner {
+      padding: var(--an-space-4) var(--an-space-3)
+        calc(var(--an-space-8) + env(safe-area-inset-bottom, 0px));
+      /* Momentum scrolling on iOS, and a scrollbar that is not needed on a
+         touch device where the gesture is the affordance. */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
     .shell__backdrop {
       display: block;
       position: fixed;
-      inset: 56px 0 0;
+      top: 56px;
+      left: 0;
+      right: 0;
+      height: calc(100dvh - 56px);
       z-index: 25;
       border: none;
       background: var(--an-scrim);
