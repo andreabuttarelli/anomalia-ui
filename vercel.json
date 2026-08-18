@@ -5,12 +5,37 @@
   "framework": "sveltekit",
   "headers": [
     {
+      "source": "/(.*)",
+      "missing": [
+        {
+          "type": "host",
+          "value": "ui.anomalia.so"
+        }
+      ],
+      "headers": [
+        {
+          "key": "x-robots-tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
       "source": "/fonts/(.*)",
-      "headers": [{ "key": "cache-control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/_app/immutable/(.*)",
-      "headers": [{ "key": "cache-control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }
