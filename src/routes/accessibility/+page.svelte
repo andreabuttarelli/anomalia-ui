@@ -107,7 +107,7 @@
     measured.flatMap((group) => group.rows).filter((row) => row.ratio < row.min).length
   );
 
-  const usage = `import { contrastRatio, contrastLevel, readTokenColor } from '@anomalia/ui';
+  const usage = `import { contrastRatio, contrastLevel, readTokenColor } from '@anomalia-so/ui';
 
 // Check a brand override before shipping it
 const ratio = contrastRatio('#c485fe', '#ffffff');

@@ -5,12 +5,12 @@
   import CodeBlock from '../docs/components/CodeBlock.svelte';
   import { components } from '../docs/registry.js';
 
-  const install = `npm install @anomalia/ui`;
+  const install = `npm install @anomalia-so/ui`;
 
   const setup = `<!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import '@anomalia/ui/styles.css';
-  import { ThemeProvider, Toaster } from '@anomalia/ui';
+  import '@anomalia-so/ui/styles.css';
+  import { ThemeProvider, Toaster } from '@anomalia-so/ui';
 
   let { children } = $props();
 <\/script>
@@ -21,7 +21,7 @@
 </ThemeProvider>`;
 
   const usage = `<script lang="ts">
-  import { Button, Card, TextField, toast } from '@anomalia/ui';
+  import { Button, Card, TextField, toast } from '@anomalia-so/ui';
 
   let email = $state('');
 <\/script>

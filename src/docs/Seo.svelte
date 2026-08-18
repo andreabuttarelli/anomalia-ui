@@ -54,7 +54,7 @@
   }: Props = $props();
 
   /* Name first: a result list truncates from the right, so "Sidebar" has to
-     survive where "@anomalia/ui — Sidebar" would not. The home page is the one
+     survive where "@anomalia-so/ui — Sidebar" would not. The home page is the one
      exception — there the site name *is* the page name. */
   const fullTitle = $derived(
     title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — ${SITE_TAGLINE}`

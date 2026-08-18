@@ -1,6 +1,6 @@
 <div align="center">
 
-# @anomalia/ui
+# @anomalia-so/ui
 
 **A SvelteKit design system.** Apple and shadcn restraint, Material touch and motion,
 and contrast that is measured rather than claimed.
@@ -69,12 +69,19 @@ npm run audit:contrast -- --verbose   # every measured pair, both themes
 
 ## Install in an app
 
-Not on npm yet. Pick whichever of these fits your deployment:
+```bash
+npm install @anomalia-so/ui
+```
 
-**Straight from GitHub** — simplest, and it pins to a commit so it is reproducible:
+Svelte 5 is a peer dependency. There is nothing else to pull in — the package has no runtime
+dependencies of its own.
+
+Two alternatives, if the registry is not what you want:
+
+**Straight from GitHub** — pins to a commit, so it is reproducible without a release:
 
 ```bash
-npm install github:andreabuttarelli/anomalia-ui
+npm install git+https://github.com/andreabuttarelli/anomalia-ui.git
 ```
 
 **Git submodule or workspace** — when you want to develop the library and the app together:
@@ -83,16 +90,16 @@ npm install github:andreabuttarelli/anomalia-ui
 // root package.json
 {
   "workspaces": ["anomalia-ui"],
-  "dependencies": { "@anomalia/ui": "*" }
+  "dependencies": { "@anomalia-so/ui": "*" }
 }
 ```
 
-Then build the library before the app: `npm run build -w @anomalia/ui && vite build`.
+Then build the library before the app: `npm run build -w @anomalia-so/ui && vite build`.
 
 **Tarball** — no wiring, fully reproducible:
 
 ```bash
-npm run build && npm pack   # → anomalia-ui-0.1.0.tgz
+npm run build && npm pack   # → anomalia-so-ui-0.1.0.tgz
 ```
 
 ## Set up
@@ -100,8 +107,8 @@ npm run build && npm pack   # → anomalia-ui-0.1.0.tgz
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import '@anomalia/ui/styles.css';
-  import { ThemeProvider, Toaster } from '@anomalia/ui';
+  import '@anomalia-so/ui/styles.css';
+  import { ThemeProvider, Toaster } from '@anomalia-so/ui';
 
   let { children } = $props();
 </script>
@@ -152,7 +159,7 @@ site, and summarised for agents in `skills/anomalia-ui/SKILL.md`.
 
 ```svelte
 <script lang="ts">
-  import { Button, Card, TextField, toast } from '@anomalia/ui';
+  import { Button, Card, TextField, toast } from '@anomalia-so/ui';
 
   let email = $state('');
 </script>
@@ -183,8 +190,8 @@ direction, so an app's own toggle always wins without `!important`.
 
 ```css
 @import 'tailwindcss';
-@import '@anomalia/ui/styles.css';
-@import '@anomalia/ui/tailwind.css';
+@import '@anomalia-so/ui/styles.css';
+@import '@anomalia-so/ui/tailwind.css';
 ```
 
 That exposes `bg-an-surface`, `text-an-muted`, `rounded-an-lg`, `ease-an-emphasized`… pointing at the
@@ -198,7 +205,7 @@ the sans/mono rule, and the checks to run before calling a change done.
 
 ```bash
 mkdir -p .claude/skills
-ln -s ../../node_modules/@anomalia/ui/skills/anomalia-ui .claude/skills/anomalia-ui
+ln -s ../../node_modules/@anomalia-so/ui/skills/anomalia-ui .claude/skills/anomalia-ui
 ```
 
 Its two reference files are **generated** from `src/docs/catalog.ts` and the CSS

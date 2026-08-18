@@ -1,5 +1,5 @@
 {
-  "name": "@anomalia/ui",
+  "name": "@anomalia-so/ui",
   "version": "0.1.0",
   "description": "A SvelteKit design system: Apple and shadcn restraint, Material touch and motion, WCAG-audited contrast. 43 components, dark mode, zero runtime dependencies.",
   "keywords": [

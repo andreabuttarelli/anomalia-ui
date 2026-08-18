@@ -57,7 +57,7 @@
 
         <a class="shell__brand" href="/">
           <span class="shell__mark" aria-hidden="true"></span>
-          <span class="shell__name">@anomalia/ui</span>
+          <span class="shell__name">@anomalia-so/ui</span>
           <Badge size="sm" tone="accent">v0.1.0</Badge>
         </a>
 

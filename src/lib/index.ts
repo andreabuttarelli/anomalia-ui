@@ -1,11 +1,11 @@
 /**
- * @anomalia/ui — public surface.
+ * @anomalia-so/ui — public surface.
  *
  * Styles are NOT imported here: a barrel that pulls CSS in would force the
  * stylesheet on every consumer even when they only import a type. Import it
  * once in your app instead:
  *
- *     import '@anomalia/ui/styles.css';
+ *     import '@anomalia-so/ui/styles.css';
  */
 
 /* ── Buttons ──────────────────────────────────────────────────────────────── */

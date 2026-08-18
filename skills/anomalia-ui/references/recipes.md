@@ -28,8 +28,8 @@ to prevent a flash of the wrong theme on first paint.
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import '@anomalia/ui/styles.css';
-  import { ThemeProvider, Toaster, SkipLink } from '@anomalia/ui';
+  import '@anomalia-so/ui/styles.css';
+  import { ThemeProvider, Toaster, SkipLink } from '@anomalia-so/ui';
 
   let { children } = $props();
 </script>
@@ -72,7 +72,7 @@ places drifts the first time one of them changes.
 
 ```svelte
 <script lang="ts">
-  import { Text, Button } from '@anomalia/ui';
+  import { Text, Button } from '@anomalia-so/ui';
 </script>
 
 <header class="page-head">
@@ -103,7 +103,7 @@ danger treatment and announces itself — do not render your own error paragraph
 
 ```svelte
 <script lang="ts">
-  import { TextField, Textarea, Select, Switch, Button, Card, toast } from '@anomalia/ui';
+  import { TextField, Textarea, Select, Switch, Button, Card, toast } from '@anomalia-so/ui';
 
   let name = $state('');
   let email = $state('');
@@ -163,7 +163,7 @@ button, produces two overlapping targets and an ambiguous tap.
 
 ```svelte
 <script lang="ts">
-  import { List, ListItem, Switch, Avatar, Badge } from '@anomalia/ui';
+  import { List, ListItem, Switch, Avatar, Badge } from '@anomalia-so/ui';
 
   let notifications = $state(true);
 </script>
@@ -192,7 +192,7 @@ Stat tiles: label first, because the number means nothing without it, and
 
 ```svelte
 <script lang="ts">
-  import { Card, Text, Badge, Tabs, Chip, Progress } from '@anomalia/ui';
+  import { Card, Text, Badge, Tabs, Chip, Progress } from '@anomalia-so/ui';
 
   const stats = [
     { label: 'Impressions', value: '184.2k', delta: '+12.4%', tone: 'success' as const },
@@ -233,7 +233,7 @@ on the viewport rather than picking one for both.
 
 ```svelte
 <script lang="ts">
-  import { Dialog, BottomSheet, Button, mediaQuery, breakpoint } from '@anomalia/ui';
+  import { Dialog, BottomSheet, Button, mediaQuery, breakpoint } from '@anomalia-so/ui';
 
   const isPhone = mediaQuery(breakpoint.phone);
   let open = $state(false);
@@ -267,7 +267,7 @@ copy problem.
 
 ```svelte
 <script lang="ts">
-  import { Text, Button } from '@anomalia/ui';
+  import { Text, Button } from '@anomalia-so/ui';
 </script>
 
 <div class="empty">
@@ -296,7 +296,7 @@ columns, one inverted band per page at most.
 
 ```svelte
 <script lang="ts">
-  import { Text, Button } from '@anomalia/ui';
+  import { Text, Button } from '@anomalia-so/ui';
 </script>
 
 <section class="hero">
@@ -363,7 +363,7 @@ than wrapping, because a wrapped log line is a misread log line.
 
 ```svelte
 <script lang="ts">
-  import { Card, Text, Badge, Code, Kbd } from '@anomalia/ui';
+  import { Card, Text, Badge, Code, Kbd } from '@anomalia-so/ui';
 
   const log = `12:04:18  plan.produce   week=34 posts=12   ok   1.9s
 12:04:20  media.render   reel/studio-tour   ok  38.1s`;
@@ -434,7 +434,7 @@ opens to show it.
   import {
     ChatMessage, ChatThinking, ChatToolCall, ChatAttachment,
     ChatCompaction, PromptInput, IconButton, Avatar
-  } from '@anomalia/ui';
+  } from '@anomalia-so/ui';
 
   let value = $state('');
   let streaming = $state(false);

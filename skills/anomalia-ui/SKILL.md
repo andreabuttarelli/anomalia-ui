@@ -1,9 +1,9 @@
 ---
 name: anomalia-ui
-description: Build or modify UI in a SvelteKit app that uses the @anomalia/ui design system — screens, pages, forms, dashboards, dialogs, navigation, empty states, marketing sections. Use this skill whenever the work touches how something looks or behaves on screen in such an app, including "add a settings page", "make this form", "build a dashboard", "style this list", "add a modal", "why does this look off", or any request to write Svelte markup and CSS in a repo that depends on @anomalia/ui — even when the user does not mention the design system by name.
+description: Build or modify UI in a SvelteKit app that uses the @anomalia-so/ui design system — screens, pages, forms, dashboards, dialogs, navigation, empty states, marketing sections. Use this skill whenever the work touches how something looks or behaves on screen in such an app, including "add a settings page", "make this form", "build a dashboard", "style this list", "add a modal", "why does this look off", or any request to write Svelte markup and CSS in a repo that depends on @anomalia-so/ui — even when the user does not mention the design system by name.
 ---
 
-# Building with @anomalia/ui
+# Building with @anomalia-so/ui
 
 This design system is quiet at rest and expressive on contact: near-monochrome
 surfaces, hairlines instead of shadows, tight radii — then Material interaction

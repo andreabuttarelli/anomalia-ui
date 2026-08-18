@@ -19,7 +19,7 @@ export const SITE_URL = (
   import.meta.env?.PUBLIC_DOCS_URL ?? 'https://ui.anomalia.so'
 ).replace(/\/$/, '');
 
-export const SITE_NAME = '@anomalia/ui';
+export const SITE_NAME = '@anomalia-so/ui';
 
 export const SITE_TAGLINE = 'A SvelteKit design system';
 

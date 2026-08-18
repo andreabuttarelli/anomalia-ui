@@ -10,7 +10,7 @@
   let { data }: { data: PageData } = $props();
 
   const doc = $derived(data.doc);
-  const importLine = $derived(`import { ${doc.exports.join(', ')} } from '@anomalia/ui';`);
+  const importLine = $derived(`import { ${doc.exports.join(', ')} } from '@anomalia-so/ui';`);
 
   /** Split a note on backticks so `code` spans render as code, not literal text. */
   function segments(note: string) {
