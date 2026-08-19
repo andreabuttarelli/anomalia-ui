@@ -1,33 +1,25 @@
 <!--
-  Landing mockup — Anomalia's home page: a marketing page that has to convert,
-  not an app screen with copy around it.
+  Landing mockup — Anomalia's home page, in the register that actually sells.
 
-  The order is the argument, and it is the order a landing page earns a signup
-  in: claim and capture first, then the pain in numbers, then the outcome in the
-  reader's terms, then proof that it is real, then the price against what they
-  pay today, then the objections, then the ask again. The signature section —
-  one week of the product running, on a sticky clock — sits in the middle, where
-  a demo belongs: after someone knows why they should care, before they are
-  asked to decide.
+  Two references are fused here on purpose. The **structure** is a conversion
+  page: claim and capture, the pain in numbers, the outcome in the reader's
+  terms, the product running for a week, a comparison against what they pay
+  today, price, objections, the ask again. The **surface** is the one modern
+  AI landing pages have converged on and lightreel.ai executes cleanly — a
+  full-bleed brand panel instead of a white page, the interaction itself in the
+  hero rather than a screenshot of it, big heavy headings, sections built as
+  tinted rounded cards with the product bleeding out of their edges, pill
+  buttons with an arrow, and proof floating around the price.
 
-  Three rules held the design together:
+  The paint is anomalia.so's, declared once as a page theme: `--accent`,
+  `--accent-2`, and the brand panel they glow inside. The type is where the two
+  references disagree — anomalia.so sets headings light, the reference sets them
+  heavy — and a page that has to convert takes the heavy one, tightly tracked.
 
-    • **Every section ends in a next step.** Five CTAs, one capture field
-      repeated at top and bottom, and the microcopy that removes the risk sits
-      under the button rather than in a footnote.
-    • **Outcomes above mechanism.** "A week of content, every week" is the
-      promise; `plan.week` and the trace are the evidence, and evidence goes
-      under the promise, never over it.
-    • **Nothing invented.** The market numbers carry their sources, the proof is
-      the product's own counters, and there is not a single fabricated customer
-      logo or testimonial on the page — a landing page that lies converts once.
-
-  The paint is anomalia.so's, as a page-level theme: `--accent`, `--accent-2`,
-  the two-blob aurora, light headings on tight tracking, pill controls. Below
-  that line everything is the library — Card, Table, Badge, the chat trace — and
-  ink stays the interactive colour, so every control still clears the contrast
-  the audit enforces. The accent is identity: glow, artwork, the loop. It is
-  wired to nothing you can click.
+  Under all of it the library is unchanged: Card, Table, Badge, the chat trace,
+  the tokens. `--an-accent` is untouched, so every control still clears the
+  contrast the audit enforces, and the accent stays what it should be — identity
+  and light, wired to nothing you can click.
 -->
 <script lang="ts">
   import Seo from '../../../docs/Seo.svelte';
@@ -349,11 +341,12 @@
   <p class="doc-page__eyebrow">Showcase</p>
   <h1 class="doc-page__title">Landing page</h1>
   <p class="doc-page__lead">
-    A marketing page in the shape that earns a signup: claim and capture, the pain in numbers,
-    outcomes in the reader's terms, one week of the product running as the demo, a comparison
-    against what they pay today, pricing, objections, and the ask again. Painted in anomalia.so's
-    palette — <code>--accent</code>, <code>--accent-2</code>, the aurora, light headings — over the
-    library's components, with ink still doing every control.
+    The conversion shape — claim and capture, pain, outcome, the product running for a week,
+    comparison, price, objections, the ask again — on the surface modern AI landing pages have
+    converged on: a full-bleed brand panel, the interaction in the hero, heavy headings, tinted
+    cards with the product bleeding out of them. Painted in anomalia.so's
+    <code>--accent</code>/<code>--accent-2</code>, built from the library, with ink still doing
+    every control.
   </p>
 
   <div class="frame">
@@ -384,66 +377,62 @@
       {/snippet}
     </SiteHeader>
 
-    <!-- ── 1 · Claim and capture ────────────────────────────────────────── -->
+    <!-- ── 1 · The brand panel: claim, capture, and the thing itself ─────── -->
     <section class="hero" id="top">
-      <div class="aurora" aria-hidden="true"></div>
+      <div class="panel">
+        <div class="aurora" aria-hidden="true"></div>
 
-      <div class="hero__inner">
-        <p class="pill-label">
-          <span class="pill-label__dot" aria-hidden="true"></span>
-          One brain · one publisher · a team of agents
-        </p>
+        <div class="panel__grid">
+          <div class="hero__copy">
+            <p class="kicker">One brain · a team of agents · everywhere you publish</p>
+            <h2 class="hero__title">Your marketing, done before Monday morning.</h2>
+            <p class="hero__lead">
+              Anomalia learns your company once, then plans, writes, designs and publishes
+              everything you put out — Instagram, TikTok, LinkedIn, your blog, your ads.
+            </p>
 
-        <h2 class="hero__title">Your marketing, done<br />before Monday morning.</h2>
-
-        <p class="hero__lead">
-          Anomalia learns your company once, then plans, writes, designs and publishes everything
-          you put out — Instagram, TikTok, LinkedIn, your blog, your ads. You approve in one tap.
-        </p>
-
-        <form class="capture" onsubmit={(e) => e.preventDefault()}>
-          <TextField
-            bind:value={site}
-            label="Start with your website"
-            placeholder="acmestudio.com"
-            size="lg"
-            fieldClass="capture__field"
-          />
-          <Button size="lg" pill type="submit">Start free</Button>
-        </form>
-
-        <p class="capture__note">
-          No card. One brand free, forever. Or <a href="#run">connect it to Claude</a> and run it from
-          your terminal.
-        </p>
-
-        <p class="hero__live">
-          <StatusDot label="Live" tone="success" pulse />
-          <span class="hero__count"><Counter value={1284} /></span>
-          pieces published by Anomalia today
-        </p>
-      </div>
-
-      <!-- The product, cropped at the fold: enough to be real, not enough to
-           finish reading — the reason to keep scrolling. -->
-      <div class="hero__shot" bind:this={runEl}>
-        <div class="window">
-          <div class="window__bar">
-            <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="window__url">app.anomalia.so/runs</span>
-          </div>
-          <div class="window__body">
-            <div class="panel__head">
-              <div>
-                <Text variant="caption" as="p">Weekly run</Text>
-                <Text variant="headline" as="h3">Week 34 · Acme Studio</Text>
-              </div>
-              <Badge variant="soft" tone={step === DONE ? 'success' : 'info'} dot>
-                {step === DONE ? 'Ready for review' : 'Working'}
-              </Badge>
+            <div class="hero__actions">
+              <Button size="lg" variant="secondary" pill>
+                Start free
+                {#snippet trailing()}<span aria-hidden="true">→</span>{/snippet}
+              </Button>
+              <a class="hero__api" href="#run">&lt;/&gt; run it from your terminal</a>
             </div>
-            <Divider />
-            <div class="panel__body">
+
+            <p class="hero__note">No card · One brand free, forever · You approve every piece</p>
+          </div>
+
+          <!-- The interaction, not a picture of it: type a website and the run
+               below is what comes back. -->
+          <div class="hero__box" bind:this={runEl}>
+            <form class="capture" onsubmit={(e) => e.preventDefault()}>
+              <TextField
+                bind:value={site}
+                aria-label="Your website"
+                placeholder="acmestudio.com"
+                size="lg"
+                fieldClass="capture__field"
+              />
+              <Button size="lg" pill type="submit">Start free</Button>
+            </form>
+
+            <div class="hero__chip">
+              <span class="hero__chip-glyphs">
+                {@render glyph('instagram')}
+                {@render glyph('tiktok')}
+                {@render glyph('linkedin')}
+              </span>
+              <span><Counter value={1284} /> pieces published today</span>
+            </div>
+
+            <div class="hero__run">
+              <div class="panel__head">
+                <Text variant="footnote" weight="semibold">Week 34 · Acme Studio</Text>
+                <Badge variant="soft" tone={step === DONE ? 'success' : 'info'} dot>
+                  {step === DONE ? 'Ready for review' : 'Working'}
+                </Badge>
+              </div>
+              <Divider />
               <div class="trace">
                 <ChatThinking
                   active={step === 0}
@@ -463,36 +452,26 @@
                   />
                 {/each}
               </div>
-
-              {#if step === DONE}
-                <ChatMessage role="assistant" name="Anomalia" timestamp="09:16">
-                  {#snippet avatar()}<Avatar size="xs" name="Anomalia" />{/snippet}
-                  Week 34 is ready: four posts, the reel on Friday and the pricing article. Thursday
-                  stays clear for the shoot. Nothing goes out until you approve.
-                </ChatMessage>
-              {/if}
             </div>
           </div>
         </div>
-        <div class="hero__fade" aria-hidden="true"></div>
+
+        <div class="panel__surfaces">
+          <p class="panel__surfaces-label">Publishes to</p>
+          <ul class="surfaces__list">
+            {#each surfaces as surface (surface)}
+              <li class="surfaces__item">
+                {@render glyph(surface)}
+                <span>{@render surfaceName(surface)}</span>
+              </li>
+            {/each}
+          </ul>
+        </div>
       </div>
     </section>
 
-    <!-- ── 2 · Surfaces ─────────────────────────────────────────────────── -->
-    <section class="surfaces" aria-label="Surfaces Anomalia publishes to">
-      <p class="surfaces__label">Publishes to</p>
-      <ul class="surfaces__list">
-        {#each surfaces as surface (surface)}
-          <li class="surfaces__item">
-            {@render glyph(surface)}
-            <span>{@render surfaceName(surface)}</span>
-          </li>
-        {/each}
-      </ul>
-    </section>
-
-    <!-- ── 3 · The pain ─────────────────────────────────────────────────── -->
-    <section class="band band--tint">
+    <!-- ── 2 · The pain ─────────────────────────────────────────────────── -->
+    <section class="band">
       <header class="band__head">
         <p class="eyebrow">The hard truth</p>
         <h3 class="band__title">You know you should be everywhere.<br />You cannot keep it up.</h3>
@@ -506,9 +485,7 @@
         {#each pains as pain, i (pain.source + pain.figure)}
           <Reveal index={i}>
             <div class="pain">
-              <p class="pain__figure">
-                <Counter value={pain.figure} suffix={pain.suffix} />
-              </p>
+              <p class="pain__figure"><Counter value={pain.figure} suffix={pain.suffix} /></p>
               <p class="pain__claim">{pain.claim}</p>
               <p class="pain__source">{pain.source}</p>
             </div>
@@ -517,8 +494,8 @@
       </div>
     </section>
 
-    <!-- ── 4 · The outcome ──────────────────────────────────────────────── -->
-    <section class="band">
+    <!-- ── 3 · The outcome ──────────────────────────────────────────────── -->
+    <section class="band band--tint">
       <header class="band__head">
         <p class="eyebrow">What you get</p>
         <h3 class="band__title">Hand it over on Monday.<br />Read the results on Friday.</h3>
@@ -537,13 +514,16 @@
       </div>
 
       <div class="band__cta">
-        <Button size="lg" pill>Start free</Button>
+        <Button size="lg" pill>
+          Start free
+          {#snippet trailing()}<span aria-hidden="true">→</span>{/snippet}
+        </Button>
         <Text variant="footnote" tone="muted">Set up in the time it takes to read the next section.</Text>
       </div>
     </section>
 
-    <!-- ── 5 · The demo: one week, start to finish ──────────────────────── -->
-    <section class="band band--head-only" id="run">
+    <!-- ── 4 · One week, as four cards ──────────────────────────────────── -->
+    <section class="band" id="run">
       <header class="band__head">
         <p class="eyebrow">How it works</p>
         <h3 class="band__title">One week, start to finish.</h3>
@@ -552,32 +532,21 @@
           company to the Friday it learns from the results.
         </p>
       </header>
-    </section>
 
-    <div class="run">
-      <aside class="rail" aria-hidden="true">
-        <div class="rail__sticky">
-          <p class="rail__clock">{moments[current].time}</p>
-          <p class="rail__actor">{moments[current].actor}</p>
-          <ol class="rail__ticks">
-            {#each moments as moment, i (moment.id)}
-              <li class="rail__tick" data-on={i <= current ? '' : undefined}></li>
-            {/each}
-          </ol>
-        </div>
-      </aside>
-
-      <div class="moments">
+      <div class="features">
         <!-- 01 · Brain -->
-        <article class="moment" id="brain" data-index="0" bind:this={momentEls[0]}>
-          <p class="stamp moment__stamp">Mon 09:14 · Brain</p>
-          <h4 class="moment__title">It already knows your company.</h4>
-          <p class="moment__lead">
-            Your site, your past posts, your documents, your products — read once and kept. You never
-            brief it twice, and every piece it writes traces back to something you can open and edit.
-          </p>
+        <article class="feature feature--a" id="brain">
+          <div class="feature__copy">
+            <p class="chip">Mon 09:14 · Brain</p>
+            <h4 class="feature__title">It already knows your company.</h4>
+            <p class="feature__body">
+              Your site, your past posts, your documents, your products — read once and kept. You
+              never brief it twice, and every piece it writes traces back to something you can open.
+            </p>
+            <a class="link-cta" href="#price">See what it learns <span aria-hidden="true">→</span></a>
+          </div>
 
-          <Reveal class="moment__artifact">
+          <div class="feature__shot">
             <div class="window">
               <div class="window__bar">
                 <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -605,33 +574,24 @@
                   <ListItem title="Products" value="12" />
                   <ListItem title="Documents" value="48" />
                 </List>
-                <Divider />
-                <div class="panel__foot">
-                  <span class="swatches" aria-hidden="true">
-                    <span class="swatch swatch--accent"></span>
-                    <span class="swatch swatch--accent-2"></span>
-                    <span class="swatch swatch--ink"></span>
-                    <span class="swatch swatch--paper"></span>
-                  </span>
-                  <Text variant="footnote" tone="faint" family="mono">synced 09:14</Text>
-                </div>
               </div>
             </div>
-          </Reveal>
+          </div>
         </article>
 
-        <p class="aside">Nobody re-typed the brief. That is the entire job of the brain.</p>
-
         <!-- 02 · Agents -->
-        <article class="moment" id="agents" data-index="1" bind:this={momentEls[1]}>
-          <p class="stamp moment__stamp">Mon 09:16 · Agents</p>
-          <h4 class="moment__title">Two minutes later, the week exists.</h4>
-          <p class="moment__lead">
-            Six pieces, laid out across seven days, in the formats each surface rewards. Thursday is
-            blocked for a shoot, so nothing lands on Thursday.
-          </p>
+        <article class="feature feature--b feature--flip" id="agents">
+          <div class="feature__copy">
+            <p class="chip">Mon 09:16 · Agents</p>
+            <h4 class="feature__title">Two minutes later, the week exists.</h4>
+            <p class="feature__body">
+              Six pieces, laid out across seven days, in the formats each surface rewards. Thursday
+              is blocked for a shoot, so nothing lands on Thursday.
+            </p>
+            <a class="link-cta" href="#price">See a full week <span aria-hidden="true">→</span></a>
+          </div>
 
-          <Reveal class="moment__artifact">
+          <div class="feature__shot">
             <div class="window">
               <div class="window__bar">
                 <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -669,99 +629,98 @@
                 </div>
               </div>
             </div>
-          </Reveal>
+          </div>
         </article>
 
-        <p class="aside">No prompt was written. The plan came out of the company, not out of you.</p>
-
         <!-- 03 · Publisher -->
-        <article class="moment" id="publisher" data-index="2" bind:this={momentEls[2]}>
-          <p class="stamp moment__stamp">Mon 11:00 · Publisher</p>
-          <h4 class="moment__title">It goes out, everywhere you own.</h4>
-          <p class="moment__lead">
-            One queue for social, blog and ads — cut per surface, scheduled at the hour that surface
-            rewards, and re-synced the moment you edit anything.
-          </p>
+        <article class="feature feature--c" id="publisher">
+          <div class="feature__copy">
+            <p class="chip">Mon 11:00 · Publisher</p>
+            <h4 class="feature__title">It goes out, everywhere you own.</h4>
+            <p class="feature__body">
+              One queue for social, blog and ads — cut per surface, scheduled at the hour that
+              surface rewards, re-synced the moment you edit anything.
+            </p>
+            <a class="link-cta" href="#compare">Compare with your stack <span aria-hidden="true">→</span></a>
+          </div>
 
-          <Reveal class="moment__artifact moment__artifact--split">
-            <div class="split">
-              <div class="window">
-                <div class="window__bar">
-                  <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                  <span class="window__url">app.anomalia.so/content</span>
-                </div>
-                <div class="window__body">
-                  <Table label="This week's queue" density="compact">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th scope="col">Work</th>
-                          <th scope="col">Surfaces</th>
-                          <th scope="col">State</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {#each queue as row (row.work)}
-                          <tr>
-                            <td>
-                              <span class="cell__title">{row.work}</span>
-                              <span class="cell__sub">{row.kind}</span>
-                            </td>
-                            <td>
-                              <span class="cell__glyphs">
-                                {#each row.on as name (name)}
-                                  {@render glyph(name)}
-                                {/each}
-                              </span>
-                            </td>
-                            <td><Badge variant="soft" tone={row.tone} dot>{row.state}</Badge></td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </Table>
-                </div>
+          <div class="feature__shot feature__shot--pair">
+            <div class="window">
+              <div class="window__bar">
+                <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="window__url">app.anomalia.so/content</span>
               </div>
+              <div class="window__body">
+                <Table label="This week's queue" density="compact">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Work</th>
+                        <th scope="col">Surfaces</th>
+                        <th scope="col">State</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {#each queue as row (row.work)}
+                        <tr>
+                          <td>
+                            <span class="cell__title">{row.work}</span>
+                            <span class="cell__sub">{row.kind}</span>
+                          </td>
+                          <td>
+                            <span class="cell__glyphs">
+                              {#each row.on as name (name)}
+                                {@render glyph(name)}
+                              {/each}
+                            </span>
+                          </td>
+                          <td><Badge variant="soft" tone={row.tone} dot>{row.state}</Badge></td>
+                        </tr>
+                      {/each}
+                    </tbody>
+                  </table>
+                </Table>
+              </div>
+            </div>
 
-              <div class="phone">
-                <div class="phone__screen">
-                  <header class="post__head">
-                    <Avatar size="xs" name="Acme Studio" />
-                    <span class="post__name">acmestudio</span>
-                    {@render glyph('instagram')}
-                  </header>
+            <div class="phone">
+              <div class="phone__screen">
+                <header class="post__head">
+                  <Avatar size="xs" name="Acme Studio" />
+                  <span class="post__name">acmestudio</span>
+                  {@render glyph('instagram')}
+                </header>
 
-                  <div class="post__art" aria-hidden="true">
-                    <span class="post__kicker">Behind the scenes</span>
-                    <span class="post__headline">Three fabrics,<br />one jacket.</span>
-                    <span class="post__mark"></span>
-                  </div>
+                <div class="post__art" aria-hidden="true">
+                  <span class="post__kicker">Behind the scenes</span>
+                  <span class="post__headline">Three fabrics,<br />one jacket.</span>
+                  <span class="post__mark"></span>
+                </div>
 
-                  <div class="post__meta">
-                    <span class="post__caption">
-                      <b>acmestudio</b> Every panel starts as a swatch on the bench. Here is how the
-                      three end up in one piece.
-                    </span>
-                    <span class="post__stats">1,284 likes · 09:16</span>
-                  </div>
+                <div class="post__meta">
+                  <span class="post__caption">
+                    <b>acmestudio</b> Every panel starts as a swatch on the bench.
+                  </span>
+                  <span class="post__stats">1,284 likes · 09:16</span>
                 </div>
               </div>
             </div>
-          </Reveal>
+          </div>
         </article>
 
-        <p class="aside">Three surfaces, one queue, one approval — and it was on Monday.</p>
-
         <!-- 04 · Back to the brain -->
-        <article class="moment" id="friday" data-index="3" bind:this={momentEls[3]}>
-          <p class="stamp moment__stamp">Fri 18:00 · Back to the brain</p>
-          <h4 class="moment__title">Friday's numbers become Monday's plan.</h4>
-          <p class="moment__lead">
-            What performed goes back where it came from, so next week is written knowing it. A
-            scheduler cannot do this. Neither can a chatbot. Together they still cannot.
-          </p>
+        <article class="feature feature--d feature--flip" id="friday">
+          <div class="feature__copy">
+            <p class="chip">Fri 18:00 · Back to the brain</p>
+            <h4 class="feature__title">Friday's numbers become Monday's plan.</h4>
+            <p class="feature__body">
+              What performed goes back where it came from, so next week is written knowing it. A
+              scheduler cannot do this. Neither can a chatbot. Together they still cannot.
+            </p>
+            <a class="link-cta" href="#price">Start the loop <span aria-hidden="true">→</span></a>
+          </div>
 
-          <Reveal class="moment__artifact">
+          <div class="feature__shot">
             <div class="window">
               <div class="window__bar">
                 <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -775,7 +734,6 @@
                     {/snippet}
                   </Stat>
                   <Stat label="Approved unchanged" value="92" unit="%" delta="+6pt" direction="up" hint="of the week" />
-                  <Stat label="Your time on it" value="11" unit="min" delta="−4h" direction="down" hint="vs last week" />
                 </div>
                 <Divider class="results__rule" />
                 <p class="loop">
@@ -786,12 +744,12 @@
                 </p>
               </div>
             </div>
-          </Reveal>
+          </div>
         </article>
       </div>
-    </div>
+    </section>
 
-    <!-- ── 6 · The comparison ───────────────────────────────────────────── -->
+    <!-- ── 5 · The comparison ───────────────────────────────────────────── -->
     <section class="band band--tint" id="compare">
       <header class="band__head">
         <p class="eyebrow">Compare</p>
@@ -837,7 +795,7 @@
       </div>
     </section>
 
-    <!-- ── 7 · Pricing ──────────────────────────────────────────────────── -->
+    <!-- ── 6 · Price, with the proof floating around it ─────────────────── -->
     <section class="band" id="price">
       <header class="band__head">
         <p class="eyebrow">Pricing</p>
@@ -845,96 +803,119 @@
         <p class="band__lead">Per brand, not per seat. Cancel by closing the tab.</p>
       </header>
 
-      <div class="plans">
-        <Card>
-          <p class="plan__name">Free</p>
-          <p class="plan__price">€0<span class="plan__period">forever</span></p>
-          <p class="plan__note">One brand, weekly plan, everything reviewed by you.</p>
-          <Divider class="plan__rule" />
-          <ul class="plan__list">
-            <li>One brand</li>
-            <li>Brain, plan and queue</li>
-            <li>Two surfaces</li>
-          </ul>
-          <Button fullWidth pill variant="outline">Start free</Button>
-        </Card>
+      <div class="price-stage">
+        <!-- Numbers rather than testimonials: the product's own counters, in the
+             position a landing page usually fills with invented quotes. -->
+        <div class="float float--1" aria-hidden="false">
+          <p class="float__figure">92%</p>
+          <p class="float__label">of pieces go out with no edit at all</p>
+        </div>
+        <div class="float float--2">
+          <p class="float__figure">11 min</p>
+          <p class="float__label">median time an owner spends per week</p>
+        </div>
+        <div class="float float--3">
+          <p class="float__figure">184k</p>
+          <p class="float__label">pieces published by Anomalia so far</p>
+        </div>
 
-        <Card variant="elevated" selected class="plan--featured">
-          <div class="plan__head">
-            <p class="plan__name">Studio</p>
-            <Badge variant="solid" size="sm">Most used</Badge>
-          </div>
-          <p class="plan__price">€49<span class="plan__period">per brand, per month</span></p>
-          <p class="plan__note">The whole run: brain, agents, publisher, autopilot.</p>
-          <Divider class="plan__rule" />
-          <ul class="plan__list">
-            <li>Every surface, including blog and ads</li>
-            <li>SEO and GEO audits</li>
-            <li>Autopilot, or review everything</li>
-            <li>CLI, MCP and API</li>
-          </ul>
-          <Button fullWidth pill>Start free, upgrade later</Button>
-          <p class="plan__risk">14 days, no card. Keep everything it made either way.</p>
-        </Card>
+        <div class="plans">
+          <Card>
+            <p class="plan__name">Free</p>
+            <p class="plan__price">€0<span class="plan__period">forever</span></p>
+            <p class="plan__note">One brand, weekly plan, everything reviewed by you.</p>
+            <Divider class="plan__rule" />
+            <ul class="plan__list">
+              <li>One brand</li>
+              <li>Brain, plan and queue</li>
+              <li>Two surfaces</li>
+            </ul>
+            <Button fullWidth pill variant="outline">Start free</Button>
+          </Card>
+
+          <Card variant="elevated" selected>
+            <div class="plan__head">
+              <p class="plan__name">Studio</p>
+              <Badge variant="solid" size="sm">Most used</Badge>
+            </div>
+            <p class="plan__price">€49<span class="plan__period">per brand, per month</span></p>
+            <p class="plan__note">The whole run: brain, agents, publisher, autopilot.</p>
+            <Divider class="plan__rule" />
+            <ul class="plan__list">
+              <li>Every surface, including blog and ads</li>
+              <li>SEO and GEO audits</li>
+              <li>Autopilot, or review everything</li>
+              <li>CLI, MCP and API</li>
+            </ul>
+            <Button fullWidth pill>
+              Start free, upgrade later
+              {#snippet trailing()}<span aria-hidden="true">→</span>{/snippet}
+            </Button>
+            <p class="plan__risk">14 days, no card. Keep everything it made either way.</p>
+          </Card>
+        </div>
       </div>
     </section>
 
-    <!-- ── 8 · Objections ───────────────────────────────────────────────── -->
+    <!-- ── 7 · Objections ───────────────────────────────────────────────── -->
     <section class="band band--tight">
-      <header class="band__head band__head--left">
-        <p class="eyebrow">Before you ask</p>
-        <h3 class="band__title band__title--sm">The five questions everyone asks.</h3>
+      <header class="band__head">
+        <h3 class="band__title">Frequently asked.</h3>
       </header>
 
-      <Accordion bind:open={faqOpen} items={faq}>
-        {#snippet children(value)}
-          {#if value === 'post'}
-            Not unless you turn Autopilot on. By default every piece waits in review and nothing
-            leaves without a tap. The switch is per brand, and you can flip it back mid-week.
-          {:else if value === 'voice'}
-            It writes from your voice rules and your own past posts, not from a generic model
-            persona — and 92% of pieces go out with no edit at all. The ones that do not, you fix in
-            the queue, and it learns from the fix.
-          {:else if value === 'marketing'}
-            No. That is the point of the brain: you describe the company once, in your words, and
-            the strategy, the cadence and the formats come from the product. Most owners never open
-            anything but the approval queue.
-          {:else if value === 'stop'}
-            Yes. Pause the plan and everything not yet published stops immediately. Nothing is ever
-            queued outside the window you can see.
-          {:else}
-            Everything it wrote, designed and scheduled is yours — export the brain, the plan and the
-            content, in the open formats they were stored in. No lock-in and no ransom.
-          {/if}
-        {/snippet}
-      </Accordion>
+      <div class="faq">
+        <Accordion bind:open={faqOpen} items={faq}>
+          {#snippet children(value)}
+            {#if value === 'post'}
+              Not unless you turn Autopilot on. By default every piece waits in review and nothing
+              leaves without a tap. The switch is per brand, and you can flip it back mid-week.
+            {:else if value === 'voice'}
+              It writes from your voice rules and your own past posts, not from a generic model
+              persona — and 92% of pieces go out with no edit at all. The ones that do not, you fix
+              in the queue, and it learns from the fix.
+            {:else if value === 'marketing'}
+              No. That is the point of the brain: you describe the company once, in your words, and
+              the strategy, the cadence and the formats come from the product. Most owners never
+              open anything but the approval queue.
+            {:else if value === 'stop'}
+              Yes. Pause the plan and everything not yet published stops immediately. Nothing is
+              ever queued outside the window you can see.
+            {:else}
+              Everything it wrote, designed and scheduled is yours — export the brain, the plan and
+              the content, in the open formats they were stored in. No lock-in and no ransom.
+            {/if}
+          {/snippet}
+        </Accordion>
+      </div>
     </section>
 
-    <!-- ── 9 · The ask, again ───────────────────────────────────────────── -->
+    <!-- ── 8 · The ask, again, on the brand panel ───────────────────────── -->
     <section class="closer">
-      <div class="aurora aurora--closer" aria-hidden="true"></div>
-      <div class="closer__inner">
-        <h3 class="closer__title">Give it one week.</h3>
-        <p class="closer__lead">
-          Put in your website. It reads your company, writes next week and shows it to you — before
-          you decide anything.
-        </p>
+      <div class="panel panel--closer">
+        <div class="aurora aurora--closer" aria-hidden="true"></div>
+        <div class="closer__inner">
+          <h3 class="closer__title">Give it one week.</h3>
+          <p class="closer__lead">
+            Put in your website. It reads your company, writes next week and shows it to you —
+            before you decide anything.
+          </p>
 
-        <form class="capture capture--closer" onsubmit={(e) => e.preventDefault()}>
-          <!-- No visible label on the inverted band: the label renders in ink
-               and would sit unreadable on the dark surface, and the sentence
-               above already names the field. The accessible name stays. -->
-          <TextField
-            bind:value={siteFooter}
-            aria-label="Your website"
-            placeholder="acmestudio.com"
-            size="lg"
-            fieldClass="capture__field"
-          />
-          <Button size="lg" variant="secondary" pill type="submit">Start free</Button>
-        </form>
+          <form class="capture capture--closer" onsubmit={(e) => e.preventDefault()}>
+            <TextField
+              bind:value={siteFooter}
+              aria-label="Your website"
+              placeholder="acmestudio.com"
+              size="lg"
+              fieldClass="capture__field"
+            />
+            <Button size="lg" variant="secondary" pill type="submit">
+              Start free
+              {#snippet trailing()}<span aria-hidden="true">→</span>{/snippet}
+            </Button>
+          </form>
 
-        <p class="closer__risk">No card · One brand free forever · Cancel by closing the tab</p>
+          <p class="closer__risk">No card · One brand free forever · Cancel by closing the tab</p>
+        </div>
       </div>
     </section>
 
@@ -962,26 +943,28 @@
   }
 
   /*
-    The page theme — the token layer for this mockup, which is the one place a
-    raw value belongs. `--accent` and `--accent-2` are anomalia.so's, and
-    `--an-brand` is re-pointed at them so the library's brand moments agree with
-    the marketing paint. Nothing here touches `--an-accent`: ink stays the
-    interactive colour, which is what keeps every control at the contrast the
-    audit guarantees.
+    The page theme — the token layer for this mockup, and the one place a raw
+    value belongs. `--accent` and `--accent-2` are anomalia.so's; `--panel` is
+    the brand surface the hero and the closer are painted on, fixed in both
+    themes because a brand panel that inverts with the OS is not a brand.
+    `--an-accent` is deliberately untouched: ink stays the interactive colour,
+    which is what keeps every control at the contrast the audit guarantees.
   */
   .frame {
     --accent: #c485fe;
     --accent-2: #ecb2ed;
     --an-brand: var(--accent);
-    --display-weight: 300;
-    --display-track: -0.04em;
+    --panel: #0e0917;
+    --on-panel: #ffffff;
+    --display-weight: var(--an-weight-bold);
+    --display-track: -0.035em;
 
     position: relative;
     margin-top: var(--an-space-6);
     border: 1px solid var(--an-border);
     border-radius: var(--an-radius-xl);
-    /* `clip`, not `hidden`: `hidden` would make the frame a scroll container,
-       and a scroll container that never scrolls kills the sticky rail. */
+    /* `clip`, not `hidden`: `hidden` makes the frame a scroll container, which
+       silently breaks any sticky descendant. */
     overflow: clip;
     background: var(--an-surface);
   }
@@ -990,23 +973,198 @@
     position: absolute;
   }
 
-  /* ── Aurora ────────────────────────────────────────────────────────────── */
+  /* ── The brand panel ───────────────────────────────────────────────────── */
+  /* A landing page that opens on a white page opens on nothing. This is the
+     one large colour field on the site: near-black with the accent burning
+     through it, inset so its corners read as a card rather than a band. */
+  .panel {
+    position: relative;
+    border-radius: var(--an-radius-2xl);
+    background: var(--panel);
+    color: var(--on-panel);
+    overflow: clip;
+    padding: var(--an-space-16) var(--an-space-10) var(--an-space-8);
+  }
+
   .aurora {
     position: absolute;
-    inset: -35% -10% auto;
-    height: 660px;
+    inset: -30% -10% auto;
+    height: 720px;
     pointer-events: none;
     background:
-      radial-gradient(55% 70% at 28% 55%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 70%),
-      radial-gradient(50% 70% at 76% 45%, color-mix(in srgb, var(--accent-2) 30%, transparent), transparent 72%);
-    filter: blur(6px);
+      radial-gradient(50% 60% at 22% 40%, color-mix(in srgb, var(--accent) 58%, transparent), transparent 70%),
+      radial-gradient(46% 60% at 78% 30%, color-mix(in srgb, var(--accent-2) 46%, transparent), transparent 72%);
+    filter: blur(10px);
+    opacity: 0.85;
   }
 
-  :global([data-theme='dark']) .aurora {
-    opacity: 0.5;
+  .panel__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: var(--an-space-10);
+    align-items: center;
   }
 
-  /* ── Shared marketing type ─────────────────────────────────────────────── */
+  .kicker {
+    margin: 0 0 var(--an-space-5);
+    font-size: var(--an-text-footnote-size);
+    color: color-mix(in srgb, var(--on-panel) 66%, transparent);
+  }
+
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+    line-height: 1.02;
+    letter-spacing: var(--display-track);
+    font-weight: var(--display-weight);
+    color: var(--on-panel);
+  }
+
+  .hero__lead {
+    margin: var(--an-space-5) 0 0;
+    max-width: 40ch;
+    font-size: var(--an-text-callout-size);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--on-panel) 72%, transparent);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--an-space-5);
+    margin-top: var(--an-space-8);
+  }
+
+  .hero__api {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-footnote-size);
+    color: color-mix(in srgb, var(--on-panel) 72%, transparent);
+    text-underline-offset: 3px;
+  }
+
+  .hero__note {
+    margin: var(--an-space-6) 0 0;
+    font-size: var(--an-text-footnote-size);
+    color: color-mix(in srgb, var(--on-panel) 55%, transparent);
+  }
+
+  /* The interaction sits in the hero as a light card on the panel: the field
+     you actually type in, the counter that proves it is running, and the run
+     it produces, cropped. */
+  .hero__box {
+    position: relative;
+    padding: var(--an-space-5);
+    border-radius: var(--an-radius-2xl);
+    background: var(--an-surface);
+    box-shadow: var(--an-shadow-xl);
+  }
+
+  .capture {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--an-space-3);
+  }
+
+  :global(.capture__field) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hero__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    margin-top: var(--an-space-4);
+    padding: var(--an-space-2) var(--an-space-3);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-full);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero__chip-glyphs {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-1);
+  }
+
+  .hero__run {
+    margin-top: var(--an-space-4);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-lg);
+    overflow: hidden;
+    background: var(--an-surface-raised);
+  }
+
+  .trace {
+    display: flex;
+    flex-direction: column;
+    padding: var(--an-space-3) var(--an-space-4) var(--an-space-4);
+  }
+
+  .panel__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--an-space-4);
+    padding: var(--an-space-4);
+  }
+
+  .panel__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--an-space-4);
+    padding: var(--an-space-4);
+  }
+
+  .panel__surfaces {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--an-space-3) var(--an-space-6);
+    margin-top: var(--an-space-16);
+    padding-top: var(--an-space-6);
+    border-top: 1px solid color-mix(in srgb, var(--on-panel) 12%, transparent);
+    color: color-mix(in srgb, var(--on-panel) 70%, transparent);
+  }
+
+  .panel__surfaces-label {
+    margin: 0;
+    font-size: var(--an-text-caption-size);
+    letter-spacing: var(--an-text-caption-track);
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .surfaces__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--an-space-3) var(--an-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .surfaces__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    font-size: var(--an-text-footnote-size);
+  }
+
+  .hero {
+    padding: var(--an-space-6) var(--an-space-6) var(--an-space-10);
+  }
+
+  /* ── Wordmark ──────────────────────────────────────────────────────────── */
   .wordmark {
     display: inline-flex;
     align-items: center;
@@ -1030,6 +1188,19 @@
     max-width: 34ch;
   }
 
+  /* ── Bands ─────────────────────────────────────────────────────────────── */
+  .band {
+    padding: var(--an-space-20) var(--an-space-8);
+  }
+
+  .band--tint {
+    background: color-mix(in srgb, var(--accent) 5%, var(--an-surface-sunken));
+  }
+
+  .band--tight {
+    padding-block: var(--an-space-16);
+  }
+
   .eyebrow {
     margin: 0 0 var(--an-space-4);
     font-size: var(--an-text-caption-size);
@@ -1039,123 +1210,211 @@
     font-weight: var(--an-weight-medium);
   }
 
-  .stamp {
-    margin: 0 0 var(--an-space-4);
-    font-family: var(--an-font-mono);
-    font-size-adjust: var(--an-font-mono-adjust);
-    font-size: var(--an-text-footnote-size);
-    color: var(--an-text-faint);
-  }
-
-  /* ── 1 · Hero ──────────────────────────────────────────────────────────── */
-  .hero {
-    position: relative;
-    padding: var(--an-space-20) var(--an-space-8) 0;
-    text-align: center;
-    border-bottom: 1px solid var(--an-border);
-  }
-
-  .hero__inner {
-    position: relative;
+  .band__head {
     max-width: 760px;
-    margin: 0 auto;
+    margin: 0 auto var(--an-space-12);
+    text-align: center;
   }
 
-  /* The category line, as a pill rather than an eyebrow: it is the first thing
-     read and it has to say what this is, not whisper it. */
-  .pill-label {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--an-space-2);
-    margin: 0 0 var(--an-space-6);
-    padding: var(--an-space-2) var(--an-space-4);
-    border: 1px solid var(--an-border);
-    border-radius: var(--an-radius-full);
-    background: var(--an-surface);
-    font-size: var(--an-text-footnote-size);
-    color: var(--an-text-muted);
-  }
-
-  .pill-label__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: var(--an-radius-full);
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  }
-
-  .hero__title {
+  .band__title {
     margin: 0;
-    font-size: clamp(2.3rem, 5vw, 3.9rem);
-    line-height: 1.04;
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    line-height: 1.06;
     letter-spacing: var(--display-track);
     font-weight: var(--display-weight);
     color: var(--an-text);
   }
 
-  .hero__lead {
-    margin: var(--an-space-5) auto 0;
-    max-width: 54ch;
+  .band__lead {
+    margin: var(--an-space-4) auto 0;
+    max-width: 56ch;
     font-size: var(--an-text-callout-size);
     line-height: 1.6;
     color: var(--an-text-muted);
   }
 
-  /* ── Capture ───────────────────────────────────────────────────────────── */
-  /* The field and the button are one object: same height, no gap wide enough to
-     read as two decisions. The label sits above and is real, not a placeholder
-     pretending to be one. */
-  .capture {
+  .band__cta {
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: var(--an-space-3);
-    margin-top: var(--an-space-8);
-    text-align: start;
+    margin-top: var(--an-space-12);
   }
 
-  :global(.capture__field) {
-    width: min(340px, 100%);
+  /* ── Pain ──────────────────────────────────────────────────────────────── */
+  .pains {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--an-space-5);
   }
 
-  .capture__note {
+  .pain {
+    height: 100%;
+    padding: var(--an-space-8);
+    border-radius: var(--an-radius-2xl);
+    background: var(--an-surface-sunken);
+  }
+
+  .pain__figure {
+    margin: 0;
+    font-size: clamp(2.8rem, 5vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: var(--display-track);
+    font-weight: var(--display-weight);
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(120deg, var(--an-text), color-mix(in srgb, var(--accent) 85%, var(--an-text)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .pain__claim {
     margin: var(--an-space-4) 0 0;
-    font-size: var(--an-text-footnote-size);
-    color: var(--an-text-muted);
-  }
-
-  .capture__note a {
+    font-size: var(--an-text-callout-size);
+    line-height: 1.5;
     color: var(--an-text);
   }
 
-  .hero__live {
+  .pain__source {
+    margin: var(--an-space-4) 0 0;
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
+  /* ── Outcomes ──────────────────────────────────────────────────────────── */
+  .outcomes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--an-space-5);
+  }
+
+  .outcome {
+    height: 100%;
+    padding: var(--an-space-8);
+    border-radius: var(--an-radius-2xl);
+    background: var(--an-surface);
+  }
+
+  .outcome__index {
+    display: block;
+    margin-bottom: var(--an-space-4);
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
+  .outcome__title {
+    margin: 0;
+    font-size: var(--an-text-title-3-size);
+    line-height: var(--an-text-title-3-line);
+    letter-spacing: var(--an-text-title-3-track);
+    font-weight: var(--an-weight-semibold);
+    color: var(--an-text);
+  }
+
+  .outcome__body {
+    margin: var(--an-space-3) 0 0;
+    font-size: var(--an-text-footnote-size);
+    line-height: 1.6;
+    color: var(--an-text-muted);
+  }
+
+  /* ── Feature cards ─────────────────────────────────────────────────────── */
+  /* Each is a tinted card with the product bleeding off its edge: the crop is
+     what makes a screenshot read as a live surface instead of an illustration. */
+  .features {
+    display: grid;
+    gap: var(--an-space-5);
+  }
+
+  .feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    gap: var(--an-space-10);
+    align-items: center;
+    padding: var(--an-space-12) 0 var(--an-space-12) var(--an-space-12);
+    border-radius: var(--an-radius-2xl);
+    overflow: clip;
+  }
+
+  .feature--flip {
+    padding: var(--an-space-12) var(--an-space-12) var(--an-space-12) 0;
+  }
+
+  .feature--flip .feature__copy {
+    order: 2;
+  }
+
+  .feature--a {
+    background: color-mix(in srgb, var(--accent) 13%, var(--an-surface));
+  }
+
+  .feature--b {
+    background: color-mix(in srgb, var(--accent-2) 16%, var(--an-surface));
+  }
+
+  .feature--c {
+    background: var(--an-surface-sunken);
+  }
+
+  .feature--d {
+    background: color-mix(in srgb, var(--accent) 9%, var(--an-surface-sunken));
+  }
+
+  .chip {
+    display: inline-block;
+    margin: 0 0 var(--an-space-4);
+    padding: var(--an-space-1) var(--an-space-3);
+    border-radius: var(--an-radius-full);
+    background: color-mix(in srgb, var(--an-text) 8%, transparent);
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .feature__title {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.4vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: var(--display-track);
+    font-weight: var(--display-weight);
+    color: var(--an-text);
+  }
+
+  .feature__body {
+    margin: var(--an-space-4) 0 0;
+    max-width: 42ch;
+    font-size: var(--an-text-callout-size);
+    line-height: 1.55;
+    color: var(--an-text-muted);
+  }
+
+  /* The inline CTA takes the accessible brand text token, not the accent
+     itself — the accent is a light violet and would fail on this tint. */
+  .link-cta {
     display: inline-flex;
     align-items: center;
     gap: var(--an-space-2);
-    margin: var(--an-space-8) 0 0;
+    margin-top: var(--an-space-6);
     font-size: var(--an-text-footnote-size);
-    color: var(--an-text-muted);
-  }
-
-  .hero__count {
     font-weight: var(--an-weight-semibold);
-    font-variant-numeric: tabular-nums;
-    color: var(--an-text);
+    color: var(--an-brand-text);
+    text-underline-offset: 4px;
   }
 
-  /* The screenshot runs off the bottom of the section behind a fade: enough of
-     the product to be believed, not enough to be finished with. */
-  .hero__shot {
-    position: relative;
-    max-width: 880px;
-    margin: var(--an-space-16) auto 0;
-    padding-bottom: var(--an-space-16);
+  .feature__shot {
+    min-width: 0;
   }
 
-  .hero__fade {
-    position: absolute;
-    inset: auto 0 0;
-    height: 180px;
-    background: linear-gradient(180deg, transparent, var(--an-surface) 82%);
+  .feature__shot--pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: var(--an-space-5);
+    align-items: end;
   }
 
   /* ── Window mockup ─────────────────────────────────────────────────────── */
@@ -1164,7 +1423,7 @@
     border-radius: var(--an-radius-2xl);
     overflow: hidden;
     background: var(--an-surface-raised);
-    box-shadow: var(--an-shadow-lg);
+    box-shadow: var(--an-shadow-xl);
     text-align: start;
   }
 
@@ -1200,309 +1459,7 @@
     padding: var(--an-space-5);
   }
 
-  .panel__head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--an-space-4);
-    padding: var(--an-space-4);
-  }
-
-  .panel__body {
-    padding: var(--an-space-4);
-  }
-
-  .panel__foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--an-space-4);
-    padding: var(--an-space-4);
-  }
-
-  .trace {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── 2 · Surfaces ──────────────────────────────────────────────────────── */
-  .surfaces {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: var(--an-space-4) var(--an-space-8);
-    padding: var(--an-space-6) var(--an-space-8);
-    border-bottom: 1px solid var(--an-border);
-    background: var(--an-surface-sunken);
-  }
-
-  .surfaces__label {
-    margin: 0;
-    font-size: var(--an-text-caption-size);
-    letter-spacing: var(--an-text-caption-track);
-    text-transform: uppercase;
-    color: var(--an-text-faint);
-  }
-
-  .surfaces__list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--an-space-3) var(--an-space-6);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .surfaces__item {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--an-space-2);
-    font-size: var(--an-text-footnote-size);
-    color: var(--an-text-muted);
-  }
-
-  /* ── Bands ─────────────────────────────────────────────────────────────── */
-  .band {
-    padding: var(--an-space-20) var(--an-space-8);
-    border-bottom: 1px solid var(--an-border);
-  }
-
-  .band--tint {
-    background: color-mix(in srgb, var(--accent) 4%, var(--an-surface-sunken));
-  }
-
-  .band--tight {
-    padding-block: var(--an-space-16);
-  }
-
-  .band--head-only {
-    padding-bottom: var(--an-space-12);
-    border-bottom: none;
-  }
-
-  .band__head {
-    max-width: 720px;
-    margin: 0 auto var(--an-space-12);
-    text-align: center;
-  }
-
-  .band__head--left {
-    margin-inline: 0;
-    text-align: start;
-  }
-
-  .band__title {
-    margin: 0;
-    font-size: clamp(1.8rem, 3.4vw, 2.7rem);
-    line-height: 1.1;
-    letter-spacing: var(--display-track);
-    font-weight: var(--display-weight);
-    color: var(--an-text);
-  }
-
-  .band__title--sm {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-  }
-
-  .band__lead {
-    margin: var(--an-space-4) auto 0;
-    max-width: 56ch;
-    font-size: var(--an-text-callout-size);
-    line-height: 1.6;
-    color: var(--an-text-muted);
-  }
-
-  .band__cta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--an-space-3);
-    margin-top: var(--an-space-12);
-  }
-
-  /* ── 3 · Pain ──────────────────────────────────────────────────────────── */
-  .pains {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--an-space-8);
-  }
-
-  .pain {
-    padding-top: var(--an-space-5);
-    border-top: 1px solid var(--an-border-strong);
-  }
-
-  /* The figure is the argument, so it gets the display size and the brand hue —
-     the one number on the page allowed to shout. */
-  .pain__figure {
-    margin: 0;
-    font-size: clamp(2.6rem, 5vw, 3.4rem);
-    line-height: 1;
-    letter-spacing: var(--display-track);
-    font-weight: var(--display-weight);
-    font-variant-numeric: tabular-nums;
-    background: linear-gradient(120deg, var(--an-text), color-mix(in srgb, var(--accent) 85%, var(--an-text)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .pain__claim {
-    margin: var(--an-space-4) 0 0;
-    font-size: var(--an-text-callout-size);
-    line-height: 1.55;
-    color: var(--an-text);
-  }
-
-  .pain__source {
-    margin: var(--an-space-3) 0 0;
-    font-family: var(--an-font-mono);
-    font-size-adjust: var(--an-font-mono-adjust);
-    font-size: var(--an-text-caption-size);
-    color: var(--an-text-faint);
-  }
-
-  /* ── 4 · Outcomes ──────────────────────────────────────────────────────── */
-  .outcomes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--an-space-10);
-  }
-
-  .outcome__index {
-    display: block;
-    margin-bottom: var(--an-space-4);
-    font-family: var(--an-font-mono);
-    font-size-adjust: var(--an-font-mono-adjust);
-    font-size: var(--an-text-caption-size);
-    color: var(--an-text-faint);
-  }
-
-  .outcome__title {
-    margin: 0;
-    font-size: var(--an-text-title-3-size);
-    line-height: var(--an-text-title-3-line);
-    letter-spacing: var(--an-text-title-3-track);
-    font-weight: var(--an-weight-semibold);
-    color: var(--an-text);
-  }
-
-  .outcome__body {
-    margin: var(--an-space-3) 0 0;
-    font-size: var(--an-text-footnote-size);
-    line-height: 1.6;
-    color: var(--an-text-muted);
-  }
-
-  /* ── 5 · The demo spine ────────────────────────────────────────────────── */
-  .run {
-    display: grid;
-    grid-template-columns: 200px minmax(0, 1fr);
-    border-bottom: 1px solid var(--an-border);
-  }
-
-  .rail {
-    border-inline-end: 1px solid var(--an-border);
-    background: color-mix(in srgb, var(--accent) 4%, var(--an-surface-rail));
-  }
-
-  .rail__sticky {
-    position: sticky;
-    top: var(--an-space-20);
-    padding: var(--an-space-10) var(--an-space-5);
-  }
-
-  .rail__clock {
-    margin: 0;
-    font-family: var(--an-font-mono);
-    font-size-adjust: var(--an-font-mono-adjust);
-    font-size: var(--an-text-title-3-size);
-    letter-spacing: var(--an-text-title-3-track);
-    color: var(--an-text);
-  }
-
-  .rail__actor {
-    margin: var(--an-space-2) 0 var(--an-space-6);
-    font-size: var(--an-text-caption-size);
-    letter-spacing: var(--an-text-caption-track);
-    text-transform: uppercase;
-    color: var(--an-text-faint);
-  }
-
-  .rail__ticks {
-    display: grid;
-    gap: var(--an-space-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .rail__tick {
-    height: 2px;
-    width: var(--an-space-8);
-    background: var(--an-border-strong);
-    transition: background var(--an-duration-medium-1) var(--an-ease-standard);
-  }
-
-  .rail__tick[data-on] {
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  }
-
-  .moment {
-    padding: var(--an-space-16) var(--an-space-10);
-  }
-
-  .moment__title {
-    margin: 0;
-    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-    line-height: 1.12;
-    letter-spacing: var(--display-track);
-    font-weight: var(--display-weight);
-    color: var(--an-text);
-  }
-
-  .moment__lead {
-    margin: var(--an-space-4) 0 0;
-    max-width: 54ch;
-    font-size: var(--an-text-callout-size);
-    line-height: 1.6;
-    color: var(--an-text-muted);
-  }
-
-  /* The rail carries the clock at desktop width, so the stamp inside the moment
-     would say it twice. It comes back below 900px, where the rail is gone. */
-  @media (min-width: 901px) {
-    .moment__stamp {
-      display: none;
-    }
-  }
-
-  :global(.moment__artifact) {
-    display: block;
-    margin-top: var(--an-space-8);
-    max-width: 640px;
-  }
-
-  :global(.moment__artifact--split) {
-    max-width: none;
-  }
-
-  .aside {
-    margin: 0;
-    padding: var(--an-space-6) var(--an-space-10);
-    border-block: 1px solid var(--an-border);
-    background: color-mix(in srgb, var(--accent) 5%, var(--an-surface-sunken));
-    font-size: var(--an-text-callout-size);
-    letter-spacing: var(--an-text-callout-track);
-    color: var(--an-text);
-  }
-
   /* ── Generated artwork ─────────────────────────────────────────────────── */
-  /* Anomalia renders the image as well as the words, so the mockups cannot use
-     stock photography — this is the same two hues, rotated, which is what the
-     product's own output looks like. */
   .art,
   .piece__art,
   .post__art {
@@ -1550,34 +1507,6 @@
     padding: var(--an-space-4);
   }
 
-  .swatches {
-    display: inline-flex;
-    gap: var(--an-space-2);
-  }
-
-  .swatch {
-    width: 18px;
-    height: 18px;
-    border-radius: var(--an-radius-full);
-    border: 1px solid var(--an-border);
-  }
-
-  .swatch--accent {
-    background: var(--accent);
-  }
-
-  .swatch--accent-2 {
-    background: var(--accent-2);
-  }
-
-  .swatch--ink {
-    background: var(--an-text);
-  }
-
-  .swatch--paper {
-    background: var(--an-surface-sunken);
-  }
-
   /* ── Week strip ────────────────────────────────────────────────────────── */
   .week {
     display: grid;
@@ -1588,7 +1517,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--an-space-2);
-    min-height: 132px;
+    min-height: 128px;
     padding: var(--an-space-3) var(--an-space-2);
     border-inline-start: 1px solid var(--an-border);
   }
@@ -1618,7 +1547,7 @@
 
   .piece__art {
     display: block;
-    height: 34px;
+    height: 32px;
   }
 
   .piece__label {
@@ -1660,13 +1589,16 @@
   .compare {
     max-width: 940px;
     margin: 0 auto;
+    padding: var(--an-space-5);
+    border-radius: var(--an-radius-2xl);
+    background: var(--an-surface);
   }
 
   /* Our column is tinted, not bolded: the eye finds it without the table
      shouting, and the tint survives greyscale as a lighter band. */
   .compare :global(th.col--us),
   .compare :global(td.col--us) {
-    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
   }
 
   .tick {
@@ -1681,24 +1613,17 @@
     font-weight: var(--an-weight-semibold);
   }
 
-  /* ── Split: the app beside the post ────────────────────────────────────── */
-  .split {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 268px;
-    gap: var(--an-space-8);
-    align-items: center;
-  }
-
+  /* ── Phone mockup ──────────────────────────────────────────────────────── */
   .phone {
     border: 1px solid var(--an-border-strong);
-    border-radius: 30px;
-    padding: 8px;
+    border-radius: 28px;
+    padding: 7px;
     background: var(--an-surface-raised);
     box-shadow: var(--an-shadow-xl);
   }
 
   .phone__screen {
-    border-radius: 23px;
+    border-radius: 22px;
     overflow: hidden;
     background: var(--an-surface);
   }
@@ -1722,9 +1647,9 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    gap: var(--an-space-2);
+    gap: var(--an-space-1);
     aspect-ratio: 4 / 5;
-    padding: var(--an-space-4);
+    padding: var(--an-space-3);
   }
 
   .post__kicker {
@@ -1735,32 +1660,32 @@
   }
 
   .post__headline {
-    font-size: 1.45rem;
+    font-size: 1.15rem;
     line-height: 1.1;
     letter-spacing: var(--display-track);
-    font-weight: var(--display-weight);
+    font-weight: var(--an-weight-semibold);
     color: #09090b;
   }
 
   .post__mark {
     position: absolute;
-    right: var(--an-space-4);
-    top: var(--an-space-4);
-    width: 16px;
-    height: 16px;
+    right: var(--an-space-3);
+    top: var(--an-space-3);
+    width: 14px;
+    height: 14px;
     border-radius: var(--an-radius-sm);
     background: color-mix(in srgb, #09090b 82%, transparent);
   }
 
   .post__meta {
     display: grid;
-    gap: var(--an-space-2);
+    gap: var(--an-space-1);
     padding: var(--an-space-3);
   }
 
   .post__caption {
-    font-size: var(--an-text-footnote-size);
-    line-height: var(--an-text-footnote-line);
+    font-size: var(--an-text-caption-size);
+    line-height: 1.45;
     color: var(--an-text-muted);
   }
 
@@ -1777,7 +1702,7 @@
   /* ── Results ───────────────────────────────────────────────────────────── */
   .results {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: var(--an-space-6);
   }
 
@@ -1804,14 +1729,68 @@
     font-size: var(--an-text-footnote-size);
   }
 
-  /* ── 7 · Pricing ───────────────────────────────────────────────────────── */
-  .plans {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--an-space-5);
-    max-width: 760px;
+  /* ── Pricing ───────────────────────────────────────────────────────────── */
+  /* The stage is narrower than the band so the floating proof has somewhere to
+     sit: cards that hang outside a full-width block just get clipped. */
+  .price-stage {
+    position: relative;
+    max-width: 600px;
     margin: 0 auto;
+  }
+
+  .plans {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--an-space-5);
     align-items: start;
+  }
+
+  /* Proof floats around the price the way testimonials do on pages like this —
+     except these are the product's own counters, so nobody had to be invented. */
+  .float {
+    position: absolute;
+    width: 186px;
+    padding: var(--an-space-4);
+    border-radius: var(--an-radius-xl);
+    background: var(--an-surface-raised);
+    border: 1px solid var(--an-border);
+    box-shadow: var(--an-shadow-lg);
+  }
+
+  .float--1 {
+    inset-inline-start: -150px;
+    top: var(--an-space-10);
+    rotate: -3deg;
+  }
+
+  .float--2 {
+    inset-inline-end: -148px;
+    top: -20px;
+    rotate: 2.5deg;
+  }
+
+  .float--3 {
+    inset-inline-end: -138px;
+    bottom: var(--an-space-8);
+    rotate: -2deg;
+  }
+
+  .float__figure {
+    margin: 0;
+    font-size: var(--an-text-title-2-size);
+    letter-spacing: var(--display-track);
+    font-weight: var(--display-weight);
+    font-variant-numeric: tabular-nums;
+    color: var(--an-text);
+  }
+
+  .float__label {
+    margin: var(--an-space-2) 0 0;
+    font-size: var(--an-text-caption-size);
+    line-height: 1.4;
+    color: var(--an-text-muted);
   }
 
   .plan__head {
@@ -1889,93 +1868,109 @@
     text-align: center;
   }
 
-  /* ── 9 · Closer ────────────────────────────────────────────────────────── */
+  /* ── FAQ ───────────────────────────────────────────────────────────────── */
+  .faq {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* ── Closer ────────────────────────────────────────────────────────────── */
   .closer {
-    position: relative;
-    padding: var(--an-space-20) var(--an-space-8);
-    background: var(--an-surface-inverse);
-    color: var(--an-text-inverse);
+    padding: var(--an-space-10) var(--an-space-6) var(--an-space-12);
+  }
+
+  .panel--closer {
+    padding-block: var(--an-space-20);
     text-align: center;
-    overflow: clip;
   }
 
   .aurora--closer {
-    inset: auto -10% -30%;
-    height: 620px;
-    opacity: 0.7;
+    inset: auto -10% -40%;
+    height: 640px;
   }
 
   .closer__inner {
     position: relative;
-    max-width: 640px;
+    max-width: 620px;
     margin: 0 auto;
   }
 
   .closer__title {
     margin: 0;
-    font-size: clamp(2rem, 4.4vw, 3rem);
-    line-height: 1.08;
+    font-size: clamp(2rem, 4.4vw, 3.1rem);
+    line-height: 1.05;
     letter-spacing: var(--display-track);
     font-weight: var(--display-weight);
+    color: var(--on-panel);
   }
 
   .closer__lead {
     margin: var(--an-space-4) auto 0;
-    max-width: 46ch;
+    max-width: 44ch;
     font-size: var(--an-text-callout-size);
     line-height: 1.6;
-    opacity: 0.72;
+    color: color-mix(in srgb, var(--on-panel) 72%, transparent);
   }
 
   .capture--closer {
+    justify-content: center;
     margin-top: var(--an-space-8);
   }
 
+  .capture--closer :global(.capture__field) {
+    flex: 0 1 320px;
+  }
+
   .closer__risk {
-    margin: var(--an-space-4) 0 0;
+    margin: var(--an-space-5) 0 0;
     font-size: var(--an-text-caption-size);
     letter-spacing: var(--an-text-caption-track);
     text-transform: uppercase;
-    opacity: 0.5;
+    color: color-mix(in srgb, var(--on-panel) 50%, transparent);
+  }
+
+  @media (max-width: 1180px) {
+    /* The floating proof is the first thing to go: overlapped cards at a narrow
+       width are a decoration that eats the price. */
+    .float {
+      display: none;
+    }
   }
 
   @media (max-width: 1000px) {
-    .split {
+    .panel__grid,
+    .feature,
+    .feature--flip {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .feature,
+    .feature--flip {
+      padding: var(--an-space-10);
+      gap: var(--an-space-8);
+    }
+
+    .feature--flip .feature__copy {
+      order: 0;
+    }
+
+    .feature__shot--pair {
       grid-template-columns: minmax(0, 1fr);
       justify-items: center;
     }
 
     .phone {
-      max-width: 300px;
+      max-width: 260px;
     }
   }
 
   @media (max-width: 900px) {
-    .run {
-      grid-template-columns: minmax(0, 1fr);
+    .panel {
+      padding: var(--an-space-12) var(--an-space-6) var(--an-space-8);
     }
 
-    /* The rail becomes nothing on a phone: the stamp inside each moment carries
-       the clock instead, and a sticky strip would just eat the screen. */
-    .rail {
-      display: none;
-    }
-
-    .hero,
-    .band,
-    .moment,
-    .aside,
-    .surfaces,
-    .closer {
-      padding-inline: var(--an-space-6);
-    }
-
-    .hero {
-      padding-top: var(--an-space-12);
-    }
-
-    .moment {
-      padding-block: var(--an-space-12);
+    .band {
+      padding: var(--an-space-16) var(--an-space-6);
     }
 
     .week {
@@ -1989,23 +1984,24 @@
 
   @media (max-width: 640px) {
     .hero,
-    .band,
-    .moment,
-    .aside,
-    .surfaces,
     .closer {
+      padding-inline: var(--an-space-3);
+    }
+
+    .band {
       padding-inline: var(--an-space-4);
     }
 
+    .feature,
+    .feature--flip {
+      padding: var(--an-space-6);
+    }
+
     /* Stacked, and the button goes full width: a 44px target beside a field is
-       the first thing to break on a phone. */
+       the first thing that breaks on a phone. */
     .capture {
       flex-direction: column;
       align-items: stretch;
-    }
-
-    :global(.capture__field) {
-      width: 100%;
     }
 
     .week {
