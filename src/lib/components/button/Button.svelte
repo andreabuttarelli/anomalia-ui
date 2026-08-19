@@ -183,7 +183,10 @@
     border-radius: var(--an-btn-radius, var(--an-radius-lg));
   }
 
-  .an-btn--pill {
+  /* Two classes on purpose: the size rules below are `.an-btn[data-size=…]`,
+     which outranks a lone `.an-btn--pill` — so the plain form lost to every
+     size and `pill` silently did nothing on anything but a default button. */
+  .an-btn.an-btn--pill {
     border-radius: var(--an-radius-full);
   }
 
