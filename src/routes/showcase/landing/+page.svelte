@@ -23,6 +23,7 @@
 -->
 <script lang="ts">
   import Seo from '../../../docs/Seo.svelte';
+  import { base } from '$app/paths';
   import { page } from '$app/stores';
   import {
     Accordion,
@@ -30,9 +31,6 @@
     Badge,
     Button,
     Card,
-    ChatMessage,
-    ChatThinking,
-    ChatToolCall,
     Counter,
     Divider,
     List,
@@ -56,45 +54,32 @@
     { label: 'Pricing', href: '#price' }
   ];
 
-  /* The three layers, named in the hero rather than left to be inferred from
-     four feature cards further down. Numbered, not arrowed: they are levels of
-     one product, and an arrow would claim a pipeline order the product does not
-     actually run in. */
-  const layers = [
-    {
-      name: 'Brain',
-      body: 'Knows your company. Voice, products, documents, what already worked.'
-    },
-    {
-      name: 'Distribution',
-      body: 'Ships it everywhere you own — social, blog, ads — cut per surface.'
-    },
-    {
-      name: 'Agents',
-      body: 'Do the work in between, on a schedule, while you are not there.'
-    }
-  ];
-
   let site = $state('');
   let siteFooter = $state('');
 
-  /* ── The run that plays in the hero ────────────────────────────────────── */
-  const calls = [
-    { name: 'brain.read', summary: 'acme.so · 48 documents', duration: 2.4 },
-    { name: 'plan.week', summary: 'week=34 · 6 pieces', duration: 1.9 },
-    { name: 'media.render', summary: 'reel/studio-tour', duration: 38.1 },
-    { name: 'seo.audit', summary: 'acme.so · 12 pages', duration: 6.4 }
+  /* ── The hero showcase ─────────────────────────────────────────────────
+     The mockup has about two seconds to say what the product is, so it shows
+     the thing it makes — a finished post, in a phone — with the three layers
+     annotated around it. A vertical log of steps is neither short nor
+     expressive: it asks to be read, and nobody reads a hero. */
+  const tags = [
+    { n: '01', layer: 'Brain', line: 'Anomalia · dry, concrete, no hype' },
+    { n: '02', layer: 'Agents', line: 'Wrote and shot this reel' },
+    { n: '03', layer: 'Distribution', line: 'Instagram · Tue 18:00' }
   ];
+
+  /* The reel in the phone is real: Anomalia's own top-rated UGC video, straight
+     out of the product's media bucket. A mockup with invented content is a
+     mockup; a mockup with the highest-scoring thing the product actually made
+     is the argument. */
+  const reel = {
+    src: `${base}/showcase/anomalia-reel.mp4`,
+    caption: '59 drafts. One tap — fixed, scheduled, approved. Drink still cold.'
+  };
 
   let runEl = $state<HTMLElement | null>(null);
   let step = $state(0);
-  const DONE = calls.length + 1;
-
-  function statusOf(i: number) {
-    if (step > i + 1) return 'success' as const;
-    if (step === i + 1) return 'running' as const;
-    return 'pending' as const;
-  }
+  const DONE = tags.length;
 
   $effect(() => {
     const node = runEl;
@@ -110,8 +95,8 @@
       (entries) => {
         if (!entries[0]?.isIntersecting) return;
         observer.disconnect();
-        for (let i = 0; i <= calls.length; i++) {
-          timers.push(setTimeout(() => (step = i + 1), 900 + i * 1100));
+        for (let i = 1; i <= DONE; i++) {
+          timers.push(setTimeout(() => (step = i), 500 + (i - 1) * 520));
         }
       },
       { threshold: 0.25 }
@@ -122,33 +107,6 @@
       observer.disconnect();
       timers.forEach(clearTimeout);
     };
-  });
-
-  /* ── The demo spine ────────────────────────────────────────────────────── */
-  const moments = [
-    { id: 'brain', time: 'Mon 09:14', actor: 'Brain' },
-    { id: 'agents', time: 'Mon 09:16', actor: 'Agents' },
-    { id: 'publisher', time: 'Mon 11:00', actor: 'Publisher' },
-    { id: 'friday', time: 'Fri 18:00', actor: 'Back to the brain' }
-  ];
-
-  let current = $state(0);
-  const momentEls: HTMLElement[] = [];
-
-  $effect(() => {
-    if (typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            current = Number((entry.target as HTMLElement).dataset.index ?? 0);
-          }
-        }
-      },
-      { rootMargin: '-45% 0px -45% 0px' }
-    );
-    momentEls.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
   });
 
   /* ── Content ───────────────────────────────────────────────────────────── */
@@ -410,80 +368,77 @@
               own, and a team of agents doing the work in between. You approve in one tap.
             </p>
 
-            <div class="hero__actions">
-              <Button size="lg" variant="secondary" pill>
+            <form class="capture" onsubmit={(e) => e.preventDefault()}>
+              <div class="capture__input">
+                <TextField
+                bind:value={site}
+                label="Start with your website"
+                placeholder="acmestudio.com"
+                size="lg"
+                  fieldClass="capture__field"
+                />
+              </div>
+              <Button size="lg" variant="secondary" pill type="submit">
                 Start free
                 {#snippet trailing()}<span aria-hidden="true">→</span>{/snippet}
               </Button>
-              <a class="hero__api" href="#run">&lt;/&gt; run it from your terminal</a>
-            </div>
-
-            <p class="hero__note">No card · One brand free, forever · You approve every piece</p>
-          </div>
-
-          <!-- The interaction, not a picture of it: type a website and the run
-               below is what comes back. -->
-          <div class="hero__box" bind:this={runEl}>
-            <form class="capture" onsubmit={(e) => e.preventDefault()}>
-              <TextField
-                bind:value={site}
-                aria-label="Your website"
-                placeholder="acmestudio.com"
-                size="lg"
-                fieldClass="capture__field"
-              />
-              <Button size="lg" pill type="submit">Start free</Button>
             </form>
 
-            <div class="hero__chip">
-              <span class="hero__chip-glyphs">
+            <p class="hero__note">
+              No card · One brand free, forever · You approve every piece
+            </p>
+
+            <p class="hero__live">
+              <span class="hero__live-glyphs">
                 {@render glyph('instagram')}
                 {@render glyph('tiktok')}
                 {@render glyph('linkedin')}
               </span>
-              <span><Counter value={1284} /> pieces published today</span>
+              <b><Counter value={1284} /></b> pieces published by Anomalia today
+              <a class="hero__api" href="#run">&lt;/&gt; or run it from your terminal</a>
+            </p>
+          </div>
+
+          <!-- The showcase: what it makes, with the three layers labelled on
+               top of it. Each tag lands in sequence, which is the shortest
+               possible way to say brain → agents → out the door. -->
+          <div class="showcase" bind:this={runEl}>
+            <div class="phone phone--hero">
+              <div class="phone__screen">
+                <header class="post__head">
+                  <Avatar size="xs" name="Anomalia" />
+                  <span class="post__name">anomalia.so</span>
+                  {@render glyph('instagram')}
+                </header>
+
+                <div class="post__art post__art--reel">
+                  <!-- Muted, looping and inline: an autoplaying reel is only
+                       allowed to start without a gesture when it is silent, and
+                       the gradient underneath is what shows if it never loads. -->
+                  <video src={reel.src} autoplay muted loop playsinline aria-label="A reel Anomalia wrote, shot and scheduled for itself"
+                  ></video>
+                </div>
+
+                <div class="post__meta">
+                  <span class="post__caption">
+                    <b>anomalia.so</b> {reel.caption}
+                  </span>
+                  <span class="post__stats">Made by Anomalia · scheduled Tue 18:00</span>
+                </div>
+              </div>
             </div>
 
-            <div class="hero__run">
-              <div class="panel__head">
-                <Text variant="footnote" weight="semibold">Week 34 · Acme Studio</Text>
-                <Badge variant="soft" tone={step === DONE ? 'success' : 'info'} dot>
-                  {step === DONE ? 'Ready for review' : 'Working'}
-                </Badge>
+            {#each tags as tag, i (tag.n)}
+              <div class="tag tag--{tag.n}" data-in={step > i ? '' : undefined}>
+                <span class="tag__n" aria-hidden="true">{tag.n}</span>
+                <span class="tag__text">
+                  <b>{tag.layer}</b>
+                  <span>{tag.line}</span>
+                </span>
               </div>
-              <Divider />
-              <div class="trace">
-                <ChatThinking
-                  active={step === 0}
-                  duration={step === 0 ? null : 3.1}
-                  preview="Reading the company, checking the calendar…"
-                >
-                  Thursday is blocked for a shoot, so the reel belongs on Friday, when the footage
-                  exists. Six pieces fits the cadence without crowding the feed.
-                </ChatThinking>
-
-                {#each calls as call, i (call.name)}
-                  <ChatToolCall
-                    name={call.name}
-                    summary={call.summary}
-                    status={statusOf(i)}
-                    duration={statusOf(i) === 'success' ? call.duration : undefined}
-                  />
-                {/each}
-              </div>
-            </div>
+            {/each}
           </div>
         </div>
-
-        <ol class="layers">
-          {#each layers as layer, i (layer.name)}
-            <li class="layer">
-              <span class="layer__index" aria-hidden="true">0{i + 1}</span>
-              <p class="layer__name">{layer.name}</p>
-              <p class="layer__body">{layer.body}</p>
-            </li>
-          {/each}
-        </ol>
 
         <div class="panel__surfaces">
           <p class="panel__surfaces-label">Publishes to</p>
@@ -1080,59 +1035,151 @@
     color: color-mix(in srgb, var(--on-panel) 55%, transparent);
   }
 
-  /* The interaction sits in the hero as a light card on the panel: the field
-     you actually type in, the counter that proves it is running, and the run
-     it produces, cropped. */
-  .hero__box {
-    position: relative;
-    padding: var(--an-space-5);
-    border-radius: var(--an-radius-2xl);
-    background: var(--an-surface);
-    box-shadow: var(--an-shadow-xl);
-  }
-
+  /* The capture is the CTA, so it lives with the words that argue for it —
+     not docked to the mockup, where it reads as a control of the demo rather
+     than the thing the page is asking you to do. */
   .capture {
     display: flex;
     align-items: flex-end;
     gap: var(--an-space-3);
+    margin-top: var(--an-space-8);
+    max-width: 470px;
+  }
+
+  /* The field sits on the dark panel, so the palette it reads from is
+     re-pointed — for the field only. Tokens, not selectors: the component is
+     untouched, and its control border keeps the 3:1 that SC 1.4.11 needs.
+     The button is deliberately outside this scope; it is a white pill and
+     wants the page's ordinary tokens. */
+  .capture__input {
+    flex: 1;
+    min-width: 0;
+
+    --an-text: var(--on-panel);
+    --an-text-muted: color-mix(in srgb, var(--on-panel) 72%, transparent);
+    --an-surface: color-mix(in srgb, var(--on-panel) 8%, transparent);
+    --an-surface-raised: color-mix(in srgb, var(--on-panel) 8%, transparent);
+    --an-border-control: color-mix(in srgb, var(--on-panel) 45%, transparent);
+    --an-ring: var(--on-panel);
   }
 
   :global(.capture__field) {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
   }
 
-  .hero__chip {
-    display: inline-flex;
+  .hero__live {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--an-space-2);
-    margin-top: var(--an-space-4);
-    padding: var(--an-space-2) var(--an-space-3);
-    border: 1px solid var(--an-border);
-    border-radius: var(--an-radius-full);
-    font-size: var(--an-text-caption-size);
-    color: var(--an-text-muted);
-    font-variant-numeric: tabular-nums;
+    margin: var(--an-space-8) 0 0;
+    font-size: var(--an-text-footnote-size);
+    color: color-mix(in srgb, var(--on-panel) 60%, transparent);
   }
 
-  .hero__chip-glyphs {
+  .hero__live b {
+    font-weight: var(--an-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    color: var(--on-panel);
+  }
+
+  /* On the panel this chip has to carry its own colour: `--an-surface` is the
+     page's white, and a mono-colour glyph like TikTok would land white on it. */
+  .hero__live-glyphs {
     display: inline-flex;
     align-items: center;
     gap: var(--an-space-1);
+    padding: var(--an-space-1) var(--an-space-2);
+    border-radius: var(--an-radius-full);
+    background: color-mix(in srgb, var(--on-panel) 12%, transparent);
+    color: var(--on-panel);
   }
 
-  .hero__run {
-    margin-top: var(--an-space-4);
-    border: 1px solid var(--an-border);
-    border-radius: var(--an-radius-lg);
-    overflow: hidden;
-    background: var(--an-surface-raised);
-  }
-
-  .trace {
+  /* ── The showcase ──────────────────────────────────────────────────────── */
+  /* One phone with a finished post in it, and the three layers as tags landing
+     on it in sequence. Short on purpose: a hero is looked at, not read, and the
+     post is the only asset here that explains the product without a sentence. */
+  .showcase {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    padding: var(--an-space-3) var(--an-space-4) var(--an-space-4);
+    justify-content: center;
+    padding-block: var(--an-space-10);
+  }
+
+  .phone--hero {
+    width: 262px;
+    rotate: 1.4deg;
+  }
+
+  .tag {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-3);
+    padding: var(--an-space-3) var(--an-space-4);
+    border-radius: var(--an-radius-xl);
+    background: var(--an-surface-raised);
+    box-shadow: var(--an-shadow-xl);
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity var(--an-duration-medium-3) var(--an-ease-standard),
+      translate var(--an-duration-medium-3) var(--an-ease-emphasized-decelerate);
+  }
+
+  .tag[data-in] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .tag__n {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex: none;
+    border-radius: var(--an-radius-full);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #09090b;
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: 10px;
+  }
+
+  .tag__text {
+    display: grid;
+    gap: 1px;
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+    white-space: nowrap;
+  }
+
+  .tag__text b {
+    font-size: var(--an-text-footnote-size);
+    font-weight: var(--an-weight-semibold);
+    color: var(--an-text);
+  }
+
+  /* The tags sit around the post, never over the part of it that carries the
+     message: the artwork's own headline is the thing the reader is meant to
+     see first. */
+  .tag--01 {
+    top: 0;
+    inset-inline-start: 0;
+    rotate: -2.5deg;
+  }
+
+  .tag--02 {
+    top: 36%;
+    inset-inline-end: 0;
+    rotate: 2deg;
+  }
+
+  .tag--03 {
+    bottom: 0;
+    inset-inline-start: 0;
+    rotate: -1.5deg;
   }
 
   .panel__head {
@@ -1151,49 +1198,6 @@
     padding: var(--an-space-4);
   }
 
-  /* The three layers, stated on the panel: numbered cards in glass over the
-     aurora, so the claim in the kicker is answered before the fold rather than
-     three sections later. */
-  .layers {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--an-space-4);
-    margin: var(--an-space-16) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .layer {
-    padding: var(--an-space-5);
-    border: 1px solid color-mix(in srgb, var(--on-panel) 14%, transparent);
-    border-radius: var(--an-radius-xl);
-    background: color-mix(in srgb, var(--on-panel) 6%, transparent);
-  }
-
-  .layer__index {
-    display: block;
-    font-family: var(--an-font-mono);
-    font-size-adjust: var(--an-font-mono-adjust);
-    font-size: var(--an-text-caption-size);
-    color: color-mix(in srgb, var(--accent-2) 90%, transparent);
-  }
-
-  .layer__name {
-    margin: var(--an-space-3) 0 0;
-    font-size: var(--an-text-title-3-size);
-    letter-spacing: var(--display-track);
-    font-weight: var(--display-weight);
-    color: var(--on-panel);
-  }
-
-  .layer__body {
-    margin: var(--an-space-2) 0 0;
-    font-size: var(--an-text-footnote-size);
-    line-height: 1.5;
-    color: color-mix(in srgb, var(--on-panel) 66%, transparent);
-  }
-
   .panel__surfaces {
     position: relative;
     display: flex;
@@ -1201,7 +1205,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--an-space-3) var(--an-space-6);
-    margin-top: var(--an-space-10);
+    margin-top: var(--an-space-16);
     padding-top: var(--an-space-6);
     border-top: 1px solid color-mix(in srgb, var(--on-panel) 12%, transparent);
     color: color-mix(in srgb, var(--on-panel) 70%, transparent);
@@ -1534,7 +1538,8 @@
   /* ── Generated artwork ─────────────────────────────────────────────────── */
   .art,
   .piece__art,
-  .post__art {
+  .post__art,
+  .outbox__art {
     background:
       radial-gradient(70% 90% at 20% 15%, color-mix(in srgb, var(--accent-2) 70%, transparent), transparent 70%),
       linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent-2) 80%, var(--an-surface)));
@@ -1712,6 +1717,19 @@
     font-size: var(--an-text-footnote-size);
     font-weight: var(--an-weight-semibold);
     color: var(--an-text);
+  }
+
+  .post__art--reel {
+    display: block;
+    aspect-ratio: 9 / 16;
+    padding: 0;
+  }
+
+  .post__art--reel video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .post__art {
@@ -2037,11 +2055,6 @@
   }
 
   @media (max-width: 900px) {
-    .layers {
-      grid-template-columns: minmax(0, 1fr);
-      margin-top: var(--an-space-10);
-    }
-
     .panel {
       padding: var(--an-space-12) var(--an-space-6) var(--an-space-8);
     }
