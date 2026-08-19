@@ -50,10 +50,29 @@
   } from '$lib/index.js';
 
   const navLinks = [
-    { label: 'How it works', href: '#run' },
-    { label: 'Compare', href: '#compare' },
-    { label: 'Pricing', href: '#price' },
-    { label: 'Docs', href: '#' }
+    { label: 'Brain', href: '#brain' },
+    { label: 'Distribution', href: '#publisher' },
+    { label: 'Agents', href: '#agents' },
+    { label: 'Pricing', href: '#price' }
+  ];
+
+  /* The three layers, named in the hero rather than left to be inferred from
+     four feature cards further down. Numbered, not arrowed: they are levels of
+     one product, and an arrow would claim a pipeline order the product does not
+     actually run in. */
+  const layers = [
+    {
+      name: 'Brain',
+      body: 'Knows your company. Voice, products, documents, what already worked.'
+    },
+    {
+      name: 'Distribution',
+      body: 'Ships it everywhere you own — social, blog, ads — cut per surface.'
+    },
+    {
+      name: 'Agents',
+      body: 'Do the work in between, on a schedule, while you are not there.'
+    }
   ];
 
   let site = $state('');
@@ -384,11 +403,11 @@
 
         <div class="panel__grid">
           <div class="hero__copy">
-            <p class="kicker">One brain · a team of agents · everywhere you publish</p>
+            <p class="kicker">Three layers, one system</p>
             <h2 class="hero__title">Your marketing, done before Monday morning.</h2>
             <p class="hero__lead">
-              Anomalia learns your company once, then plans, writes, designs and publishes
-              everything you put out — Instagram, TikTok, LinkedIn, your blog, your ads.
+              A brain that knows your company, a distribution layer that publishes everywhere you
+              own, and a team of agents doing the work in between. You approve in one tap.
             </p>
 
             <div class="hero__actions">
@@ -455,6 +474,16 @@
             </div>
           </div>
         </div>
+
+        <ol class="layers">
+          {#each layers as layer, i (layer.name)}
+            <li class="layer">
+              <span class="layer__index" aria-hidden="true">0{i + 1}</span>
+              <p class="layer__name">{layer.name}</p>
+              <p class="layer__body">{layer.body}</p>
+            </li>
+          {/each}
+        </ol>
 
         <div class="panel__surfaces">
           <p class="panel__surfaces-label">Publishes to</p>
@@ -635,7 +664,7 @@
         <!-- 03 · Publisher -->
         <article class="feature feature--c" id="publisher">
           <div class="feature__copy">
-            <p class="chip">Mon 11:00 · Publisher</p>
+            <p class="chip">Mon 11:00 · Distribution</p>
             <h4 class="feature__title">It goes out, everywhere you own.</h4>
             <p class="feature__body">
               One queue for social, blog and ads — cut per surface, scheduled at the hour that
@@ -1122,6 +1151,49 @@
     padding: var(--an-space-4);
   }
 
+  /* The three layers, stated on the panel: numbered cards in glass over the
+     aurora, so the claim in the kicker is answered before the fold rather than
+     three sections later. */
+  .layers {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--an-space-4);
+    margin: var(--an-space-16) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .layer {
+    padding: var(--an-space-5);
+    border: 1px solid color-mix(in srgb, var(--on-panel) 14%, transparent);
+    border-radius: var(--an-radius-xl);
+    background: color-mix(in srgb, var(--on-panel) 6%, transparent);
+  }
+
+  .layer__index {
+    display: block;
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: color-mix(in srgb, var(--accent-2) 90%, transparent);
+  }
+
+  .layer__name {
+    margin: var(--an-space-3) 0 0;
+    font-size: var(--an-text-title-3-size);
+    letter-spacing: var(--display-track);
+    font-weight: var(--display-weight);
+    color: var(--on-panel);
+  }
+
+  .layer__body {
+    margin: var(--an-space-2) 0 0;
+    font-size: var(--an-text-footnote-size);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--on-panel) 66%, transparent);
+  }
+
   .panel__surfaces {
     position: relative;
     display: flex;
@@ -1129,7 +1201,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--an-space-3) var(--an-space-6);
-    margin-top: var(--an-space-16);
+    margin-top: var(--an-space-10);
     padding-top: var(--an-space-6);
     border-top: 1px solid color-mix(in srgb, var(--on-panel) 12%, transparent);
     color: color-mix(in srgb, var(--on-panel) 70%, transparent);
@@ -1965,6 +2037,11 @@
   }
 
   @media (max-width: 900px) {
+    .layers {
+      grid-template-columns: minmax(0, 1fr);
+      margin-top: var(--an-space-10);
+    }
+
     .panel {
       padding: var(--an-space-12) var(--an-space-6) var(--an-space-8);
     }
