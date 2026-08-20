@@ -121,21 +121,29 @@
   const surfaces = ['instagram', 'tiktok', 'linkedin', 'x', 'youtube', 'facebook', 'reddit', 'blog', 'ads'];
 
   /* Market numbers, with the sources they came with. A landing page that makes
-     up its statistics converts exactly once. */
+     up its statistics converts exactly once.
+
+     Each one carries a picture of itself. A column of big percentages is a
+     column nobody reads: the calendar with five posts in it, the week with six
+     of its 168 hours spent, and the search everyone else turns up in say the
+     same thing in the time it takes to glance. */
   const pains = [
     {
+      viz: 'gaps',
       figure: 64,
       suffix: '%',
       claim: 'of small business owners cannot keep a consistent social presence.',
       source: 'Buffer, 2025'
     },
     {
+      viz: 'hours',
       figure: 73,
       suffix: '%',
       claim: 'of them name lack of time as the reason. Not ideas. Time.',
       source: 'Buffer, 2025'
     },
     {
+      viz: 'search',
       figure: 97,
       suffix: '%',
       claim: 'of people search online before choosing a business. If you are not there, someone else is.',
@@ -143,16 +151,37 @@
     }
   ];
 
+  /* A month of posting, as it actually goes: two good weeks, then life. */
+  const posted = [
+    true, false, true, false, false, false, false,
+    true, false, false, true, false, false, false,
+    false, false, true, false, false, false, false,
+    false, false, false, false, false, false, false
+  ];
+
+  /* 168 hours in a week. Six of them are the ones this page is about. */
+  const spentHours = new Set([54, 55, 79, 80, 128, 129]);
+
+  const searchRows = [
+    { label: 'Google', who: 'A competitor', w: 92 },
+    { label: 'ChatGPT', who: 'A competitor', w: 78 },
+    { label: 'Instagram', who: 'A competitor', w: 64 },
+    { label: 'You', who: 'Not found', w: 0 }
+  ];
+
   const outcomes = [
     {
+      viz: 'week',
       title: 'A week of content, every week',
       body: 'Posts, carousels, reels and articles planned, written, designed and queued. You open the app on Monday and it is done.'
     },
     {
+      viz: 'cited',
       title: 'Found on Google, quoted by ChatGPT',
       body: 'Long-form articles, technical SEO and GEO audits — so you turn up in the search box and in the answer box.'
     },
     {
+      viz: 'approve',
       title: 'Eleven minutes of your time',
       body: 'That is the median week: read the plan, tap approve. Everything else — writing, design, scheduling, publishing — is not your job any more.'
     }
@@ -304,6 +333,105 @@
 
 {#snippet surfaceName(name: string)}
   {#if name === 'x'}X{:else if name === 'tiktok'}TikTok{:else if name === 'youtube'}YouTube{:else if name === 'linkedin'}LinkedIn{:else if name === 'ads'}Meta &amp; Google Ads{:else}{name.charAt(0).toUpperCase() + name.slice(1)}{/if}
+{/snippet}
+
+{#snippet painViz(kind: string)}
+  {#if kind === 'gaps'}
+    <div class="viz">
+      <div class="viz__head">
+        <span>Your last month</span>
+        <span class="viz__mono">5 posts</span>
+      </div>
+      <div class="gaps">
+        {#each posted as on, i (i)}
+          <i class="gap" data-on={on ? '' : undefined}></i>
+        {/each}
+      </div>
+    </div>
+  {:else if kind === 'hours'}
+    <div class="viz">
+      <div class="viz__head">
+        <span>Your week</span>
+        <span class="viz__mono">6 / 168 h</span>
+      </div>
+      <div class="hours">
+        {#each Array(168) as _, i (i)}
+          <i class="hour" data-on={spentHours.has(i) ? '' : undefined}></i>
+        {/each}
+      </div>
+    </div>
+  {:else}
+    <div class="viz">
+      <div class="viz__head">
+        <span>“best studio near me”</span>
+      </div>
+      <ul class="serp">
+        {#each searchRows as row (row.label)}
+          <li class="serp__row" data-empty={row.w === 0 ? '' : undefined}>
+            <span class="serp__label">{row.label}</span>
+            <span class="serp__bar" style="--w: {row.w}%"></span>
+            <span class="serp__who">{row.who}</span>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
+{/snippet}
+
+{#snippet outcomeViz(kind: string)}
+  {#if kind === 'week'}
+    <div class="viz viz--light">
+      <div class="viz__head">
+        <span>Week 34</span>
+        <span class="viz__mono">6 pieces</span>
+      </div>
+      <div class="mini-week">
+        {#each week as day (day.day)}
+          <div class="mini-day">
+            <span class="mini-day__name">{day.day.charAt(0)}</span>
+            {#each day.items as item (item.label)}
+              <span class="mini-day__art art--{item.art}"></span>
+            {/each}
+          </div>
+        {/each}
+      </div>
+    </div>
+  {:else if kind === 'cited'}
+    <div class="viz viz--light">
+      <div class="viz__head">
+        <span>“who makes ultralight jackets?”</span>
+      </div>
+      <div class="answer">
+        <span class="answer__line"></span>
+        <span class="answer__line answer__line--short"></span>
+        <span class="answer__cite">
+          <span class="answer__mark" aria-hidden="true"></span>
+          Acme Studio
+          <Badge variant="soft" tone="success" size="sm">cited</Badge>
+        </span>
+      </div>
+      <div class="rank">
+        <span class="rank__pos">#1</span>
+        <span class="rank__url">acmestudio.com/ultralight</span>
+      </div>
+    </div>
+  {:else}
+    <div class="viz viz--light">
+      <div class="viz__head">
+        <span>This week's queue</span>
+        <span class="viz__mono">11:04</span>
+      </div>
+      <ul class="approve">
+        {#each ['Studio tour · Reel', 'How we price · Article', 'Three fabrics · Carousel'] as row (row)}
+          <li class="approve__row">
+            <span class="approve__tick" aria-hidden="true">✓</span>
+            {row}
+          </li>
+        {/each}
+      </ul>
+      <span class="approve__all">Approve all</span>
+    </div>
+  {/if}
 {/snippet}
 
 {#snippet tick(on: boolean)}
@@ -460,6 +588,7 @@
         {#each pains as pain, i (pain.source + pain.figure)}
           <Reveal index={i}>
             <div class="pain">
+              {@render painViz(pain.viz)}
               <p class="pain__figure"><Counter value={pain.figure} suffix={pain.suffix} /></p>
               <p class="pain__claim">{pain.claim}</p>
               <p class="pain__source">{pain.source}</p>
@@ -480,6 +609,7 @@
         {#each outcomes as outcome, i (outcome.title)}
           <Reveal index={i}>
             <article class="outcome">
+              {@render outcomeViz(outcome.viz)}
               <span class="outcome__index" aria-hidden="true">0{i + 1}</span>
               <h4 class="outcome__title">{outcome.title}</h4>
               <p class="outcome__body">{outcome.body}</p>
@@ -1314,6 +1444,270 @@
     margin-top: var(--an-space-12);
   }
 
+  /* ── Section visuals ───────────────────────────────────────────────────── */
+  /* Every card in the first two sections opens with a picture of its own claim,
+     drawn from tokens rather than illustrated: a month with five posts in it,
+     a week with six hours spent, a search someone else wins. They are small,
+     literal and readable in a glance — which is all a landing page gets. */
+  /* A fixed height, not a minimum: three cards side by side whose headings
+     start at three different heights is the thing that makes a grid of cards
+     look assembled rather than designed. */
+  .viz {
+    display: flex;
+    flex-direction: column;
+    gap: var(--an-space-3);
+    height: 196px;
+    overflow: hidden;
+    margin-bottom: var(--an-space-6);
+    padding: var(--an-space-4);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-xl);
+    background: var(--an-surface);
+  }
+
+  .viz--light {
+    background: var(--an-surface-raised);
+  }
+
+  .viz__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--an-space-3);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
+  .viz__mono {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    color: var(--an-text-muted);
+  }
+
+  /* 64% — four weeks of intentions. The gaps are the content. */
+  .gaps {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    align-content: center;
+    flex: 1;
+  }
+
+  /* A fixed row height rather than square cells: square ones scale with the
+     card width and the fourth week falls off the bottom of the panel. */
+  .gap {
+    height: 22px;
+    border-radius: var(--an-radius-sm);
+    background: var(--an-surface-sunken);
+    border: 1px solid var(--an-border);
+  }
+
+  .gap[data-on] {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+  }
+
+  /* 73% — 168 blocks, six of them lit. The scale is the argument. */
+  .hours {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    gap: 2px;
+    align-content: center;
+    flex: 1;
+  }
+
+  .hour {
+    aspect-ratio: 1;
+    border-radius: 1px;
+    background: var(--an-surface-sunken);
+  }
+
+  .hour[data-on] {
+    background: var(--accent);
+  }
+
+  /* 97% — the same query, four places, and the row that is not there. */
+  .serp {
+    display: grid;
+    gap: var(--an-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+    align-content: center;
+  }
+
+  .serp__row {
+    display: grid;
+    grid-template-columns: 68px 1fr auto;
+    align-items: center;
+    gap: var(--an-space-2);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .serp__label {
+    color: var(--an-text);
+  }
+
+  .serp__bar {
+    height: 8px;
+    width: var(--w);
+    border-radius: var(--an-radius-full);
+    background: var(--an-surface-sunken);
+    border: 1px solid var(--an-border);
+  }
+
+  .serp__row[data-empty] .serp__bar {
+    width: 100%;
+    background: none;
+    border: 1px dashed var(--an-border-strong);
+  }
+
+  .serp__row[data-empty] {
+    color: var(--an-danger);
+  }
+
+  .serp__who {
+    font-size: var(--an-text-caption-size);
+    white-space: nowrap;
+  }
+
+  /* Outcome 01 — the week, at a glance. */
+  .mini-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    flex: 1;
+    /* Top-aligned: a day with two pieces grows downward, so every day's letter
+       still sits on one line. */
+    align-items: start;
+    align-content: center;
+  }
+
+  .mini-day {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .mini-day__name {
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
+  .mini-day__art {
+    width: 100%;
+    height: 26px;
+    border-radius: var(--an-radius-sm);
+  }
+
+  /* Outcome 02 — the answer box, with the brand inside it. */
+  .answer {
+    display: grid;
+    gap: var(--an-space-2);
+    padding: var(--an-space-3);
+    border-radius: var(--an-radius-lg);
+    background: var(--an-surface-sunken);
+  }
+
+  .answer__line {
+    height: 7px;
+    border-radius: var(--an-radius-full);
+    background: var(--an-border);
+  }
+
+  .answer__line--short {
+    width: 62%;
+  }
+
+  .answer__cite {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    margin-top: var(--an-space-1);
+    font-size: var(--an-text-footnote-size);
+    font-weight: var(--an-weight-semibold);
+    color: var(--an-text);
+  }
+
+  .answer__mark {
+    width: 14px;
+    height: 14px;
+    border-radius: var(--an-radius-sm);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+
+  .rank {
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .rank__pos {
+    padding: 2px var(--an-space-2);
+    border-radius: var(--an-radius-full);
+    background: var(--an-accent);
+    color: var(--an-on-accent);
+    font-weight: var(--an-weight-semibold);
+  }
+
+  .rank__url {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+  }
+
+  /* Outcome 03 — the only screen you actually touch. */
+  .approve {
+    display: grid;
+    gap: var(--an-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex: 1;
+  }
+
+  .approve__row {
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    padding: var(--an-space-2);
+    border-radius: var(--an-radius-md);
+    background: var(--an-surface-sunken);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text);
+  }
+
+  .approve__tick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    border-radius: var(--an-radius-full);
+    background: var(--an-success);
+    color: var(--an-on-status);
+    font-size: 9px;
+  }
+
+  /* A drawn control, not a real one: it is a picture of the button, inside a
+     picture of the screen. Making it a Button would put a second, dead tab stop
+     next to the CTA that this card is trying to send you to. */
+  .approve__all {
+    align-self: stretch;
+    padding: var(--an-space-2);
+    border-radius: var(--an-radius-full);
+    background: var(--an-accent);
+    color: var(--an-on-accent);
+    font-size: var(--an-text-caption-size);
+    font-weight: var(--an-weight-semibold);
+    text-align: center;
+  }
+
   /* ── Pain ──────────────────────────────────────────────────────────────── */
   .pains {
     display: grid;
@@ -1323,14 +1717,14 @@
 
   .pain {
     height: 100%;
-    padding: var(--an-space-8);
+    padding: var(--an-space-6);
     border-radius: var(--an-radius-2xl);
     background: var(--an-surface-sunken);
   }
 
   .pain__figure {
     margin: 0;
-    font-size: clamp(2.8rem, 5vw, 3.6rem);
+    font-size: clamp(2.4rem, 4.2vw, 3rem);
     line-height: 1;
     letter-spacing: var(--display-track);
     font-weight: var(--display-weight);
@@ -1365,14 +1759,14 @@
 
   .outcome {
     height: 100%;
-    padding: var(--an-space-8);
+    padding: var(--an-space-6);
     border-radius: var(--an-radius-2xl);
     background: var(--an-surface);
   }
 
   .outcome__index {
     display: block;
-    margin-bottom: var(--an-space-4);
+    margin-bottom: var(--an-space-2);
     font-family: var(--an-font-mono);
     font-size-adjust: var(--an-font-mono-adjust);
     font-size: var(--an-text-caption-size);
