@@ -879,7 +879,7 @@
                         {/each}
                       </div>
                       <div class="artifact__foot">
-                        <Text variant="caption" tone="faint" family="mono">planned in 1.9s</Text>
+                        <Text variant="footnote" tone="faint" family="mono">planned in 1.9s</Text>
                         <span class="artifact__actions">
                           <span class="ghost-btn">Change something</span>
                           <span class="solid-btn">Approve the week</span>
