@@ -36,6 +36,8 @@
     Badge,
     Button,
     Card,
+    ChatMessage,
+    ChatThinking,
     Counter,
     Divider,
     List,
@@ -257,6 +259,17 @@
     { label: 'Craft', value: 42 },
     { label: 'Proof', value: 33 },
     { label: 'Behind the scenes', value: 25 }
+  ];
+
+  /* The rail is the point of this mockup: the week did not come out of one
+     chatbot, it came out of a team, and each of them has a thread you can open
+     and argue with. */
+  const agentThreads = [
+    { name: 'Planner', last: 'Week 34 is ready — 6 pieces', at: '09:16', on: true },
+    { name: 'Copywriter', last: 'Rewrote the pricing intro', at: '09:14' },
+    { name: 'Designer', last: 'Rendering 4 covers', at: '09:12', working: true },
+    { name: 'SEO agent', last: '12 pages audited, 3 fixes', at: '08:58' },
+    { name: 'Radar', last: '2 stories worth posting today', at: '08:40' }
   ];
 
   const queueFilters = [
@@ -787,47 +800,100 @@
             <div class="window">
               <div class="window__bar">
                 <span class="window__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="window__url">app.anomalia.so/plan</span>
+                <span class="window__url">app.anomalia.so/chat/planner</span>
               </div>
-              <div class="window__body">
-                <div class="panel__head">
-                  <div>
-                    <Text variant="caption" as="p">Proposed plan</Text>
-                    <Text variant="headline" as="h5">Week 34</Text>
-                  </div>
-                  <Badge variant="soft">6 pieces</Badge>
-                </div>
-                <Divider />
-                <div class="panel__block">
-                  <Text variant="caption" as="p">Balanced against your pillars</Text>
-                  <div class="mix">
-                    <RankBars data={pillars} share labelWidth="8.5rem" />
-                  </div>
-                </div>
-                <Divider />
-                <div class="week">
-                  {#each week as day (day.day)}
-                    <div class="day" data-blocked={day.blocked ? '' : undefined}>
-                      <span class="day__name">{day.day}</span>
-                      {#each day.items as item (item.label)}
-                        <span class="piece">
-                          <span class="piece__art">
-                            <img src={item.src} alt={item.alt} loading="lazy" />
-                            <span class="piece__glyph">{@render glyph(item.on)}</span>
+
+              <div class="chat">
+                <!-- The rail: one thread per agent, the way a person actually
+                     works with a team — you open the one you need. -->
+                <aside class="rail">
+                  <p class="rail__label">Agents</p>
+                  <ul class="rail__list">
+                    {#each agentThreads as thread (thread.name)}
+                      <li class="thread" data-on={thread.on ? '' : undefined}>
+                        <Avatar size="xs" name={thread.name} />
+                        <span class="thread__text">
+                          <span class="thread__name">
+                            {thread.name}
+                            {#if thread.working}
+                              <StatusDot label="Working" tone="info" pulse labelHidden />
+                            {/if}
                           </span>
-                          <span class="piece__label">{item.label}</span>
+                          <span class="thread__last">{thread.last}</span>
                         </span>
-                      {/each}
-                      {#if day.blocked}
-                        <span class="day__blocked">{day.blocked}</span>
-                      {/if}
+                        <span class="thread__at">{thread.at}</span>
+                      </li>
+                    {/each}
+                  </ul>
+                </aside>
+
+                <div class="talk">
+                  <ChatMessage role="user" timestamp="09:14">
+                    Plan next week. We are shooting on Thursday, keep it clear.
+                  </ChatMessage>
+
+                  <ChatMessage role="assistant" name="Planner" timestamp="09:16">
+                    {#snippet avatar()}<Avatar size="xs" name="Planner" />{/snippet}
+
+                    {#snippet before()}
+                      <div class="trace">
+                        <ChatThinking duration={1.9} preview="Reading the brand, checking the calendar…">
+                          Thursday is blocked, so the reel moves to Friday when the footage exists.
+                          Six pieces keeps the cadence without crowding the feed.
+                        </ChatThinking>
+                      </div>
+                    {/snippet}
+
+                    Here is week 34 — six pieces, balanced 42% craft, 33% proof, 25% behind the
+                    scenes. Thursday stays clear.
+
+                    <!-- The plan arrives inside the turn, as an artifact rather
+                         than as a link to somewhere else: the answer to "plan my
+                         week" is the week. -->
+                    <div class="artifact">
+                      <div class="artifact__head">
+                        <Text variant="footnote" weight="semibold">Week 34</Text>
+                        <Badge variant="soft" size="sm">6 pieces</Badge>
+                      </div>
+                      <div class="week">
+                        {#each week as day (day.day)}
+                          <div class="day" data-blocked={day.blocked ? '' : undefined}>
+                            <span class="day__name">{day.day}</span>
+                            <span class="day__pieces">
+                              {#each day.items as item (item.label)}
+                                <span class="piece">
+                                  <span class="piece__art">
+                                    <img src={item.src} alt={item.alt} loading="lazy" />
+                                    <span class="piece__glyph">{@render glyph(item.on)}</span>
+                                  </span>
+                                  <span class="piece__label">{item.label}</span>
+                                </span>
+                              {/each}
+                              {#if day.blocked}
+                                <span class="day__blocked">{day.blocked}</span>
+                              {:else if day.items.length === 0}
+                                <span class="day__empty" aria-hidden="true">—</span>
+                              {/if}
+                            </span>
+                          </div>
+                        {/each}
+                      </div>
+                      <div class="artifact__foot">
+                        <Text variant="caption" tone="faint" family="mono">planned in 1.9s</Text>
+                        <span class="artifact__actions">
+                          <span class="ghost-btn">Change something</span>
+                          <span class="solid-btn">Approve the week</span>
+                        </span>
+                      </div>
                     </div>
-                  {/each}
-                </div>
-                <Divider />
-                <div class="panel__foot">
-                  <Text variant="footnote" tone="faint" family="mono">planned in 1.9s · 4 agents</Text>
-                  <Button size="sm" pill>Approve the week</Button>
+                  </ChatMessage>
+
+                  <!-- Drawn, not a real composer: a live textarea in a mockup is
+                       a tab stop that answers nothing. -->
+                  <div class="composer">
+                    <span class="composer__ph">Ask the planner to change anything…</span>
+                    <span class="composer__send" aria-hidden="true">↑</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1574,6 +1640,171 @@
     margin-top: var(--an-space-12);
   }
 
+  /* ── The agent chat ────────────────────────────────────────────────────── */
+  /* Two columns: the team on the left, the conversation with one of them on the
+     right. The rail is what makes the claim — the week came out of four agents
+     you can each open and argue with, not out of one box that answers. */
+  .chat {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    min-height: 440px;
+  }
+
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--an-space-2);
+    padding: var(--an-space-4) var(--an-space-3);
+    border-inline-end: 1px solid var(--an-border);
+    background: var(--an-surface-rail);
+  }
+
+  .rail__label {
+    margin: 0 var(--an-space-2) var(--an-space-1);
+    font-size: var(--an-text-caption-size);
+    letter-spacing: var(--an-text-caption-track);
+    text-transform: uppercase;
+    color: var(--an-text-faint);
+  }
+
+  .rail__list {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .thread {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--an-space-2);
+    padding: var(--an-space-2);
+    border-radius: var(--an-radius-lg);
+  }
+
+  .thread[data-on] {
+    background: var(--an-surface);
+    box-shadow: var(--an-shadow-xs);
+  }
+
+  .thread__text {
+    min-width: 0;
+  }
+
+  .thread__name {
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    font-size: var(--an-text-caption-size);
+    font-weight: var(--an-weight-semibold);
+    color: var(--an-text);
+  }
+
+  /* The snippet is one line, always: a rail that reflows when an agent says
+     something long is a rail that moves while you read it. */
+  .thread__last {
+    display: block;
+    overflow: hidden;
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .thread__at {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
+  .talk {
+    display: flex;
+    flex-direction: column;
+    gap: var(--an-space-3);
+    padding: var(--an-space-5);
+  }
+
+  /* The plan, delivered inside the turn. */
+  .artifact {
+    margin-top: var(--an-space-4);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-xl);
+    overflow: hidden;
+    background: var(--an-surface);
+  }
+
+  .artifact__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--an-space-3);
+    padding: var(--an-space-3) var(--an-space-4);
+    border-bottom: 1px solid var(--an-border);
+  }
+
+  .artifact__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--an-space-3);
+    padding: var(--an-space-3) var(--an-space-4);
+    border-top: 1px solid var(--an-border);
+  }
+
+  .artifact__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-2);
+  }
+
+  /* Drawn controls, like every other control inside a mockup on this page. */
+  .ghost-btn,
+  .solid-btn {
+    padding: var(--an-space-2) var(--an-space-4);
+    border-radius: var(--an-radius-full);
+    font-size: var(--an-text-caption-size);
+    font-weight: var(--an-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .ghost-btn {
+    border: 1px solid var(--an-border-control);
+    color: var(--an-text-muted);
+  }
+
+  .solid-btn {
+    background: var(--an-accent);
+    color: var(--an-on-accent);
+  }
+
+  .composer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--an-space-3);
+    margin-top: auto;
+    padding: var(--an-space-3) var(--an-space-3) var(--an-space-3) var(--an-space-4);
+    border: 1px solid var(--an-border-control);
+    border-radius: 22px;
+    font-size: var(--an-text-footnote-size);
+    color: var(--an-text-faint);
+  }
+
+  .composer__send {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--an-radius-full);
+    background: var(--an-accent);
+    color: var(--an-on-accent);
+  }
+
   /* ── Inside the mockups ────────────────────────────────────────────────── */
   .panel__block {
     display: grid;
@@ -1640,8 +1871,8 @@
   /* The surface each piece is cut for, on the piece itself. */
   .piece__glyph {
     position: absolute;
-    right: 3px;
-    bottom: 3px;
+    right: 2px;
+    bottom: 2px;
     display: inline-flex;
     padding: 2px;
     border-radius: var(--an-radius-sm);
@@ -2114,6 +2345,16 @@
     background: color-mix(in srgb, var(--accent-2) 16%, var(--an-surface));
   }
 
+  /* The only card whose mockup is itself two columns, so it takes more of the
+     row than the others. */
+  @media (min-width: 1000px) {
+    /* Flipped, so the shot is the *first* column — the ratio has to be written
+       the other way round or the wide half lands on the paragraph. */
+    .feature--b {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    }
+  }
+
   .feature--c {
     background: var(--an-surface-sunken);
   }
@@ -2245,23 +2486,26 @@
     padding: var(--an-space-4);
   }
 
-  /* ── Week strip ────────────────────────────────────────────────────────── */
+  /* ── The week, inside a chat turn ──────────────────────────────────────── */
+  /* Seven columns is the right shape for a planning screen and the wrong one
+     for a 460px conversation: the day names break letter by letter long before
+     the thumbnails get small enough. Down the page instead — which is also how
+     a preview reads inside a message. */
   .week {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
   .day {
-    display: flex;
-    flex-direction: column;
-    gap: var(--an-space-2);
-    min-height: 128px;
-    padding: var(--an-space-3) var(--an-space-2);
-    border-inline-start: 1px solid var(--an-border);
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--an-space-3);
+    padding: var(--an-space-2) var(--an-space-4);
+    border-top: 1px solid var(--an-border);
   }
 
   .day:first-child {
-    border-inline-start: none;
+    border-top: none;
   }
 
   .day[data-blocked] {
@@ -2275,21 +2519,29 @@
     color: var(--an-text-faint);
   }
 
-  .piece {
-    display: block;
-    border-radius: var(--an-radius-md);
-    overflow: hidden;
-    border: 1px solid var(--an-border);
-    background: var(--an-surface);
+  .day__pieces {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--an-space-2) var(--an-space-4);
+    min-height: 40px;
   }
 
-  /* Positioned, because the surface glyph sits in its corner. Without this the
-     glyph escapes to the nearest positioned ancestor and lands somewhere off in
-     the card. */
+  .piece {
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-2);
+  }
+
+  /* Square, cropped, and still carrying the surface it is cut for. */
   .piece__art {
     position: relative;
     display: block;
-    height: 46px;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: var(--an-radius-md);
+    overflow: hidden;
   }
 
   .piece__art img {
@@ -2298,19 +2550,16 @@
   }
 
   .piece__label {
-    display: block;
-    padding: var(--an-space-1) var(--an-space-2);
     font-size: var(--an-text-caption-size);
     color: var(--an-text-muted);
-    text-align: center;
   }
 
-  .day__blocked {
+  .day__blocked,
+  .day__empty {
     font-family: var(--an-font-mono);
     font-size-adjust: var(--an-font-mono-adjust);
     font-size: var(--an-text-caption-size);
     color: var(--an-text-faint);
-    text-align: center;
   }
 
   /* ── Tables ────────────────────────────────────────────────────────────── */
