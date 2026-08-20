@@ -844,7 +844,8 @@
                       </div>
                     {/snippet}
 
-                    Week 34 — six pieces, balanced 42/33/25. Thursday stays clear.
+                    Here is week 34 — six pieces, balanced 42% craft, 33% proof, 25% behind the
+                    scenes. Thursday stays clear.
 
                     <!-- The plan arrives inside the turn, as an artifact rather
                          than as a link to somewhere else: the answer to "plan my
@@ -1643,14 +1644,14 @@
   /* Two columns: the team on the left, the conversation with one of them on the
      right. The rail is what makes the claim — the week came out of four agents
      you can each open and argue with, not out of one box that answers. */
-  /* A fixed viewport, not a container that grows to its content: the card has
-     to sit at the same height as the other three, and a conversation is
-     infinitely long by nature. It crops at the top, the way the real screen
-     does when you have been talking for a while. */
+  /* The chat is drawn at the size it actually is and the card cuts it off —
+     the same bleed every other mockup in this section uses. Squeezing the
+     thumbnails and the rows to make a conversation fit a box is how a screen
+     ends up looking like a diagram of itself. */
   .chat {
     display: grid;
     grid-template-columns: 190px minmax(0, 1fr);
-    height: 520px;
+    min-height: 560px;
   }
 
   .rail {
@@ -1724,31 +1725,15 @@
   }
 
   .talk {
-    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     gap: var(--an-space-3);
-    min-height: 0;
     padding: var(--an-space-5);
-    overflow: hidden;
-  }
-
-  /* The crop gets a fade rather than a hard edge: a sentence sliced mid-line
-     reads as a rendering bug, the same sentence fading out reads as scrollback. */
-  .talk::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto;
-    height: var(--an-space-16);
-    background: linear-gradient(180deg, var(--an-surface-raised), transparent);
-    pointer-events: none;
-    z-index: 1;
   }
 
   /* The plan, delivered inside the turn. */
   .artifact {
-    margin-top: var(--an-space-3);
+    margin-top: var(--an-space-4);
     border: 1px solid var(--an-border);
     border-radius: var(--an-radius-xl);
     overflow: hidden;
@@ -1760,7 +1745,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--an-space-3);
-    padding: var(--an-space-2) var(--an-space-4);
+    padding: var(--an-space-3) var(--an-space-4);
     border-bottom: 1px solid var(--an-border);
   }
 
@@ -1770,7 +1755,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--an-space-3);
-    padding: var(--an-space-2) var(--an-space-4);
+    padding: var(--an-space-3) var(--an-space-4);
     border-top: 1px solid var(--an-border);
   }
 
@@ -1890,10 +1875,10 @@
   /* The surface each piece is cut for, on the piece itself. */
   .piece__glyph {
     position: absolute;
-    right: 1px;
-    bottom: 1px;
+    right: 2px;
+    bottom: 2px;
     display: inline-flex;
-    padding: 1px;
+    padding: 2px;
     border-radius: var(--an-radius-sm);
     background: color-mix(in srgb, var(--an-surface) 88%, transparent);
     line-height: 0;
@@ -2350,6 +2335,18 @@
     .feature__shot {
       align-self: center;
     }
+
+    /* This one is a fixed height with the mockup pinned to the top, so the
+       window runs past the bottom edge and the card clips it. The cut is the
+       point: a screen that ends inside the card is a picture of a screen. */
+    .feature--b {
+      height: 660px;
+      align-items: start;
+    }
+
+    .feature--b .feature__shot {
+      align-self: start;
+    }
   }
 
   .feature--flip .feature__copy {
@@ -2519,7 +2516,7 @@
     grid-template-columns: 42px minmax(0, 1fr);
     align-items: center;
     gap: var(--an-space-3);
-    padding: 2px var(--an-space-4);
+    padding: var(--an-space-2) var(--an-space-4);
     border-top: 1px solid var(--an-border);
   }
 
@@ -2543,7 +2540,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--an-space-2) var(--an-space-4);
-    min-height: 32px;
+    min-height: 40px;
   }
 
   .piece {
@@ -2556,8 +2553,8 @@
   .piece__art {
     position: relative;
     display: block;
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
     flex: none;
     border-radius: var(--an-radius-md);
     overflow: hidden;
@@ -3035,6 +3032,17 @@
 
     .day {
       border-top: 1px solid var(--an-border);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .chat {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .rail {
+      display: none;
     }
   }
 
