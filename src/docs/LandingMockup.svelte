@@ -81,6 +81,33 @@
      out of the product's media bucket. A mockup with invented content is a
      mockup; a mockup with the highest-scoring thing the product actually made
      is the argument. */
+  /* Acme Studio's photo library — the same set the brand kit, the plan and the
+     queue all draw from, because in the product they would be. Generated for
+     this mockup rather than stock: a fictional atelier cannot have a real
+     photographer, and a gradient in a thumbnail slot is a placeholder that
+     never stops looking like one. */
+  const photo = {
+    swatches: `${base}/showcase/acme-swatches.jpg`,
+    bench: `${base}/showcase/acme-bench.jpg`,
+    detail: `${base}/showcase/acme-detail.jpg`,
+    rack: `${base}/showcase/acme-rack.jpg`,
+    hands: `${base}/showcase/acme-hands.jpg`,
+    thread: `${base}/showcase/acme-thread.jpg`,
+    studio: `${base}/showcase/acme-studio.jpg`,
+    pattern: `${base}/showcase/acme-pattern.jpg`,
+    reel: `${base}/showcase/acme-reel.jpg`,
+    ad: `${base}/showcase/acme-ad.jpg`
+  };
+
+  const moodboard = [
+    { src: photo.swatches, alt: 'Three fabric swatches on a workbench' },
+    { src: photo.bench, alt: 'Shears and chalk on the cutting bench' },
+    { src: photo.detail, alt: 'A stitched seam and a horn button' },
+    { src: photo.rack, alt: 'Finished jackets on a rail' },
+    { src: photo.hands, alt: 'Cutting wool on the table' },
+    { src: photo.thread, alt: 'A tray of thread spools' }
+  ];
+
   const reel = {
     src: `${base}/showcase/anomalia-reel.mp4`,
     caption: '59 drafts. One tap — fixed, scheduled, approved. Drink still cold.'
@@ -189,13 +216,19 @@
   ];
 
   const week = [
-    { day: 'Mon', items: [{ label: 'Carousel', art: 1, on: 'instagram' }, { label: 'Post', art: 2, on: 'x' }] },
-    { day: 'Tue', items: [{ label: 'Article', art: 3, on: 'blog' }] },
-    { day: 'Wed', items: [{ label: 'Post', art: 4, on: 'linkedin' }] },
+    {
+      day: 'Mon',
+      items: [
+        { label: 'Carousel', on: 'instagram', src: photo.swatches, alt: 'Three fabric swatches' },
+        { label: 'Post', on: 'x', src: photo.thread, alt: 'Thread spools' }
+      ]
+    },
+    { day: 'Tue', items: [{ label: 'Article', on: 'blog', src: photo.studio, alt: 'The atelier' }] },
+    { day: 'Wed', items: [{ label: 'Post', on: 'linkedin', src: photo.pattern, alt: 'Pattern pieces' }] },
     { day: 'Thu', items: [], blocked: 'shoot' },
-    { day: 'Fri', items: [{ label: 'Reel', art: 5, on: 'tiktok' }] },
+    { day: 'Fri', items: [{ label: 'Reel', on: 'tiktok', src: photo.reel, alt: 'Folding a jacket' }] },
     { day: 'Sat', items: [] },
-    { day: 'Sun', items: [{ label: 'Ad set', art: 6, on: 'ads' }] }
+    { day: 'Sun', items: [{ label: 'Ad set', on: 'ads', src: photo.ad, alt: 'The jacket, flat' }] }
   ];
 
   const queue = [
@@ -425,7 +458,7 @@
           <div class="mini-day">
             <span class="mini-day__name">{day.day.charAt(0)}</span>
             {#each day.items as item (item.label)}
-              <span class="mini-day__art art--{item.art}"></span>
+              <img class="mini-day__art" src={item.src} alt="" loading="lazy" />
             {/each}
           </div>
         {/each}
@@ -702,12 +735,9 @@
                 </div>
                 <Divider />
                 <div class="moodboard">
-                  <span class="art art--1" aria-hidden="true"></span>
-                  <span class="art art--2" aria-hidden="true"></span>
-                  <span class="art art--3" aria-hidden="true"></span>
-                  <span class="art art--4" aria-hidden="true"></span>
-                  <span class="art art--5" aria-hidden="true"></span>
-                  <span class="art art--6" aria-hidden="true"></span>
+                  {#each moodboard as shot (shot.src)}
+                    <img class="art" src={shot.src} alt={shot.alt} loading="lazy" />
+                  {/each}
                 </div>
                 <Divider />
                 <List>
@@ -781,7 +811,8 @@
                       <span class="day__name">{day.day}</span>
                       {#each day.items as item (item.label)}
                         <span class="piece">
-                          <span class="piece__art art--{item.art}" aria-hidden="true">
+                          <span class="piece__art">
+                            <img src={item.src} alt={item.alt} loading="lazy" />
                             <span class="piece__glyph">{@render glyph(item.on)}</span>
                           </span>
                           <span class="piece__label">{item.label}</span>
@@ -872,10 +903,12 @@
                   {@render glyph('instagram')}
                 </header>
 
-                <div class="post__art" aria-hidden="true">
+                <div class="post__art">
+                  <img class="post__photo" src={photo.swatches} alt="Three fabric swatches on a workbench" loading="lazy" />
+                  <span class="post__scrim" aria-hidden="true"></span>
                   <span class="post__kicker">Behind the scenes</span>
                   <span class="post__headline">Three fabrics,<br />one jacket.</span>
-                  <span class="post__mark"></span>
+                  <span class="post__mark" aria-hidden="true"></span>
                 </div>
 
                 <div class="post__meta">
@@ -930,7 +963,7 @@
                 <Divider class="results__rule" />
 
                 <div class="best">
-                  <span class="best__art art--5" aria-hidden="true"></span>
+                  <img class="best__art" src={photo.reel} alt="" loading="lazy" />
                   <span class="best__text">
                     <span class="best__title">Studio tour · Reel</span>
                     <span class="best__meta">Best of the week — the brain keeps this one</span>
@@ -2184,46 +2217,25 @@
     padding: var(--an-space-5);
   }
 
-  /* ── Generated artwork ─────────────────────────────────────────────────── */
+  /* ── Photographs ───────────────────────────────────────────────────────── */
+  /* Every image in a mockup is a real photograph of the brand's own world, and
+     they all crop the same way: cover, centred, never letterboxed. A thumbnail
+     that keeps its aspect ratio inside a fixed slot leaves grey bars, which is
+     the tell that it is a placeholder. */
   .art,
-  .piece__art,
-  .post__art,
-  .outbox__art {
-    background:
-      radial-gradient(70% 90% at 20% 15%, color-mix(in srgb, var(--accent-2) 70%, transparent), transparent 70%),
-      linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent-2) 80%, var(--an-surface)));
+  .piece__art img,
+  .mini-day__art,
+  .best__art,
+  .post__photo {
+    display: block;
+    object-fit: cover;
+    background: var(--an-surface-sunken);
   }
 
   .art {
-    display: block;
+    width: 100%;
     aspect-ratio: 1;
     border-radius: var(--an-radius-lg);
-  }
-
-  .art--2 {
-    background:
-      radial-gradient(60% 80% at 80% 20%, color-mix(in srgb, var(--accent) 65%, transparent), transparent 70%),
-      linear-gradient(200deg, var(--accent-2), color-mix(in srgb, var(--accent) 45%, var(--an-surface)));
-  }
-
-  .art--3 {
-    background:
-      radial-gradient(70% 70% at 30% 80%, color-mix(in srgb, var(--accent-2) 75%, transparent), transparent 72%),
-      linear-gradient(20deg, color-mix(in srgb, var(--accent) 70%, var(--an-text)), var(--accent-2));
-  }
-
-  .art--4 {
-    background:
-      radial-gradient(80% 60% at 60% 30%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%),
-      linear-gradient(160deg, color-mix(in srgb, var(--accent-2) 60%, var(--an-surface)), var(--accent));
-  }
-
-  .art--5 {
-    background: linear-gradient(120deg, var(--accent), var(--accent-2));
-  }
-
-  .art--6 {
-    background: linear-gradient(300deg, var(--accent-2), color-mix(in srgb, var(--accent) 70%, var(--an-text)));
   }
 
   .moodboard {
@@ -2278,6 +2290,11 @@
     position: relative;
     display: block;
     height: 46px;
+  }
+
+  .piece__art img {
+    width: 100%;
+    height: 100%;
   }
 
   .piece__label {
@@ -2383,6 +2400,34 @@
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  .post__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* The headline is ink on a photograph, so it gets a scrim rather than a
+     shadow: a drop shadow under type on a busy image is still unreadable at
+     the top of the letterforms, and this keeps the contrast the rest of the
+     page is held to. */
+  .post__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, #fafafa 10%, transparent) 0%,
+      color-mix(in srgb, #fafafa 72%, transparent) 58%,
+      color-mix(in srgb, #fafafa 92%, transparent) 100%
+    );
+  }
+
+  .post__kicker,
+  .post__headline,
+  .post__mark {
+    position: relative;
   }
 
   .post__art {
