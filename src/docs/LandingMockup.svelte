@@ -1644,14 +1644,16 @@
   /* Two columns: the team on the left, the conversation with one of them on the
      right. The rail is what makes the claim — the week came out of four agents
      you can each open and argue with, not out of one box that answers. */
-  /* The chat is drawn at the size it actually is and the card cuts it off —
-     the same bleed every other mockup in this section uses. Squeezing the
-     thumbnails and the rows to make a conversation fit a box is how a screen
-     ends up looking like a diagram of itself. */
+  /* The window is the same size as the other three mockups on this page, and
+     the conversation inside it is drawn at full size and clipped by the window
+     — which is what a scroll area does. Shrinking the thumbnails and the rows
+     until the whole thread fits is how a screen ends up looking like a diagram
+     of itself. */
   .chat {
     display: grid;
     grid-template-columns: 190px minmax(0, 1fr);
-    min-height: 560px;
+    height: 560px;
+    overflow: hidden;
   }
 
   .rail {
@@ -1728,7 +1730,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--an-space-3);
+    min-height: 0;
     padding: var(--an-space-5);
+    overflow: hidden;
   }
 
   /* The plan, delivered inside the turn. */
@@ -2336,17 +2340,6 @@
       align-self: center;
     }
 
-    /* This one is a fixed height with the mockup pinned to the top, so the
-       window runs past the bottom edge and the card clips it. The cut is the
-       point: a screen that ends inside the card is a picture of a screen. */
-    .feature--b {
-      height: 660px;
-      align-items: start;
-    }
-
-    .feature--b .feature__shot {
-      align-self: start;
-    }
   }
 
   .feature--flip .feature__copy {
