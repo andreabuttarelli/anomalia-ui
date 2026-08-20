@@ -40,6 +40,7 @@
     Divider,
     List,
     ListItem,
+    RankBars,
     Reveal,
     SiteFooter,
     SiteHeader,
@@ -188,23 +189,57 @@
   ];
 
   const week = [
-    { day: 'Mon', items: [{ label: 'Carousel', art: 1 }, { label: 'Post', art: 2 }] },
-    { day: 'Tue', items: [{ label: 'Post', art: 3 }] },
-    { day: 'Wed', items: [{ label: 'Article', art: 4 }] },
+    { day: 'Mon', items: [{ label: 'Carousel', art: 1, on: 'instagram' }, { label: 'Post', art: 2, on: 'x' }] },
+    { day: 'Tue', items: [{ label: 'Article', art: 3, on: 'blog' }] },
+    { day: 'Wed', items: [{ label: 'Post', art: 4, on: 'linkedin' }] },
     { day: 'Thu', items: [], blocked: 'shoot' },
-    { day: 'Fri', items: [{ label: 'Reel', art: 5 }] },
+    { day: 'Fri', items: [{ label: 'Reel', art: 5, on: 'tiktok' }] },
     { day: 'Sat', items: [] },
-    { day: 'Sun', items: [{ label: 'Ad set', art: 6 }] }
+    { day: 'Sun', items: [{ label: 'Ad set', art: 6, on: 'ads' }] }
   ];
 
   const queue = [
-    { work: 'Studio tour', kind: 'Reel', on: ['instagram', 'tiktok'], state: 'Scheduled', tone: 'info' },
-    { work: 'How we price', kind: 'Article', on: ['blog', 'linkedin'], state: 'Published', tone: 'success' },
-    { work: 'Three fabrics', kind: 'Carousel', on: ['instagram'], state: 'Published', tone: 'success' },
-    { work: 'Q3 launch', kind: 'Ad set', on: ['ads', 'facebook'], state: 'In review', tone: 'warning' }
+    { work: 'Three fabrics', kind: 'Carousel', on: ['instagram'], when: 'Mon 18:00', state: 'Published', tone: 'success' },
+    { work: 'How we price', kind: 'Article', on: ['blog', 'linkedin'], when: 'Tue 09:00', state: 'Published', tone: 'success' },
+    { work: 'The bench', kind: 'Post', on: ['instagram', 'x'], when: 'Wed 12:30', state: 'Published', tone: 'success' },
+    { work: 'Studio tour', kind: 'Reel', on: ['instagram', 'tiktok'], when: 'Fri 18:00', state: 'Scheduled', tone: 'info' },
+    { work: 'Winter drop', kind: 'Post', on: ['instagram'], when: 'Sun 11:00', state: 'Scheduled', tone: 'info' },
+    { work: 'Q3 launch', kind: 'Ad set', on: ['ads', 'facebook'], when: '—', state: 'In review', tone: 'warning' }
   ] as const;
 
   const reach = [8, 12, 10, 18, 22, 19, 28, 34, 31, 44, 52, 61];
+
+  /* What the studio actually read, and what it took from it. */
+  const voiceRules = ['no exclamation marks', 'no emoji', 'we, not I', 'concrete over clever'];
+
+  const sources = [
+    { name: 'acmestudio.com', meta: '128 pages', when: 'crawled 09:12' },
+    { name: 'Brand guidelines.pdf', meta: '24 pages', when: 'read 09:13' },
+    { name: 'Past posts', meta: '312 posts', when: 'synced 09:14' }
+  ];
+
+  /* The mix the plan is balanced against — the reason it is a plan and not a
+     pile of ideas. */
+  const pillars = [
+    { label: 'Craft', value: 42 },
+    { label: 'Proof', value: 33 },
+    { label: 'Behind the scenes', value: 25 }
+  ];
+
+  const queueFilters = [
+    { label: 'All', count: 6, on: true },
+    { label: 'Scheduled', count: 2, on: false },
+    { label: 'Published', count: 3, on: false },
+    { label: 'In review', count: 1, on: false }
+  ];
+
+  /* Where the week landed, once it landed. */
+  const bySurface = [
+    { label: 'Instagram', value: 84200 },
+    { label: 'TikTok', value: 52400 },
+    { label: 'Blog', value: 31800 },
+    { label: 'LinkedIn', value: 15800 }
+  ];
 
   /* The comparison is the three-tools argument where it actually converts:
      against what the reader is paying for the same job today. */
@@ -671,14 +706,36 @@
                   <span class="art art--2" aria-hidden="true"></span>
                   <span class="art art--3" aria-hidden="true"></span>
                   <span class="art art--4" aria-hidden="true"></span>
+                  <span class="art art--5" aria-hidden="true"></span>
+                  <span class="art art--6" aria-hidden="true"></span>
                 </div>
                 <Divider />
                 <List>
-                  <ListItem title="Voice" value="Warm, concrete, no exclamation marks" />
+                  <ListItem title="Voice" value="Warm, concrete" />
                   <ListItem title="Pillars" value="Craft · Proof · Behind the scenes" />
                   <ListItem title="Products" value="12" />
-                  <ListItem title="Documents" value="48" />
+                  <ListItem title="People" value="4" />
                 </List>
+                <Divider />
+                <div class="panel__block">
+                  <Text variant="caption" as="p">Rules it will not break</Text>
+                  <div class="rules">
+                    {#each voiceRules as rule (rule)}
+                      <span class="rule">{rule}</span>
+                    {/each}
+                  </div>
+                </div>
+                <Divider />
+                <ul class="sources">
+                  {#each sources as source (source.name)}
+                    <li class="source">
+                      <span class="source__dot" aria-hidden="true"></span>
+                      <span class="source__name">{source.name}</span>
+                      <span class="source__meta">{source.meta}</span>
+                      <span class="source__when">{source.when}</span>
+                    </li>
+                  {/each}
+                </ul>
               </div>
             </div>
           </div>
@@ -711,13 +768,22 @@
                   <Badge variant="soft">6 pieces</Badge>
                 </div>
                 <Divider />
+                <div class="panel__block">
+                  <Text variant="caption" as="p">Balanced against your pillars</Text>
+                  <div class="mix">
+                    <RankBars data={pillars} share labelWidth="8.5rem" />
+                  </div>
+                </div>
+                <Divider />
                 <div class="week">
                   {#each week as day (day.day)}
                     <div class="day" data-blocked={day.blocked ? '' : undefined}>
                       <span class="day__name">{day.day}</span>
                       {#each day.items as item (item.label)}
                         <span class="piece">
-                          <span class="piece__art art--{item.art}" aria-hidden="true"></span>
+                          <span class="piece__art art--{item.art}" aria-hidden="true">
+                            <span class="piece__glyph">{@render glyph(item.on)}</span>
+                          </span>
                           <span class="piece__label">{item.label}</span>
                         </span>
                       {/each}
@@ -729,8 +795,8 @@
                 </div>
                 <Divider />
                 <div class="panel__foot">
-                  <Text variant="footnote" tone="muted">Approve the week, or open any piece.</Text>
-                  <Button size="sm" pill>Approve</Button>
+                  <Text variant="footnote" tone="faint" family="mono">planned in 1.9s · 4 agents</Text>
+                  <Button size="sm" pill>Approve the week</Button>
                 </div>
               </div>
             </div>
@@ -756,12 +822,21 @@
                 <span class="window__url">app.anomalia.so/content</span>
               </div>
               <div class="window__body">
+                <div class="filters">
+                  {#each queueFilters as filter (filter.label)}
+                    <span class="filter" data-on={filter.on ? '' : undefined}>
+                      {filter.label}
+                      <b>{filter.count}</b>
+                    </span>
+                  {/each}
+                </div>
                 <Table label="This week's queue" density="compact">
                   <table>
                     <thead>
                       <tr>
                         <th scope="col">Work</th>
                         <th scope="col">Surfaces</th>
+                        <th scope="col">Goes out</th>
                         <th scope="col">State</th>
                       </tr>
                     </thead>
@@ -779,6 +854,7 @@
                               {/each}
                             </span>
                           </td>
+                          <td><span class="cell__when">{row.when}</span></td>
                           <td><Badge variant="soft" tone={row.tone} dot>{row.state}</Badge></td>
                         </tr>
                       {/each}
@@ -839,8 +915,29 @@
                     {/snippet}
                   </Stat>
                   <Stat label="Approved unchanged" value="92" unit="%" delta="+6pt" direction="up" hint="of the week" />
+                  <Stat label="Your time on it" value="11" unit="min" delta="−4h" direction="down" hint="vs last week" />
                 </div>
+
                 <Divider class="results__rule" />
+
+                <div class="panel__block">
+                  <Text variant="caption" as="p">Reach by surface</Text>
+                  <div class="mix">
+                    <RankBars data={bySurface} labelWidth="6.5rem" />
+                  </div>
+                </div>
+
+                <Divider class="results__rule" />
+
+                <div class="best">
+                  <span class="best__art art--5" aria-hidden="true"></span>
+                  <span class="best__text">
+                    <span class="best__title">Studio tour · Reel</span>
+                    <span class="best__meta">Best of the week — the brain keeps this one</span>
+                  </span>
+                  <Badge variant="soft" tone="success">48.2k</Badge>
+                </div>
+
                 <p class="loop">
                   <span class="loop__glyph" aria-hidden="true">↺</span>
                   <Text variant="footnote" tone="muted">
@@ -1444,6 +1541,154 @@
     margin-top: var(--an-space-12);
   }
 
+  /* ── Inside the mockups ────────────────────────────────────────────────── */
+  .panel__block {
+    display: grid;
+    gap: var(--an-space-3);
+    padding: var(--an-space-4);
+  }
+
+  /* Voice rules read as constraints, so they are set as chips with a struck
+     tone rather than as a sentence: a rule is a thing with an edge. */
+  .rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--an-space-2);
+  }
+
+  .rule {
+    padding: var(--an-space-1) var(--an-space-3);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-full);
+    background: var(--an-surface-sunken);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .sources {
+    display: grid;
+    gap: var(--an-space-2);
+    margin: 0;
+    padding: var(--an-space-4);
+    list-style: none;
+  }
+
+  .source {
+    display: grid;
+    grid-template-columns: 8px 1fr auto auto;
+    align-items: center;
+    gap: var(--an-space-3);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .source__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--an-radius-full);
+    background: var(--an-success);
+  }
+
+  .source__name {
+    color: var(--an-text);
+  }
+
+  .source__when {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    color: var(--an-text-faint);
+  }
+
+  /* RankBars is a component, so it only needs a width to live in. */
+  .mix {
+    max-width: 420px;
+  }
+
+  /* The surface each piece is cut for, on the piece itself. */
+  .piece__glyph {
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    display: inline-flex;
+    padding: 2px;
+    border-radius: var(--an-radius-sm);
+    background: color-mix(in srgb, var(--an-surface) 88%, transparent);
+    line-height: 0;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--an-space-2);
+    padding: var(--an-space-4) var(--an-space-4) 0;
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--an-space-2);
+    padding: var(--an-space-1) var(--an-space-3);
+    border: 1px solid var(--an-border);
+    border-radius: var(--an-radius-full);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+  }
+
+  .filter b {
+    font-variant-numeric: tabular-nums;
+    color: var(--an-text-faint);
+  }
+
+  .filter[data-on] {
+    border-color: transparent;
+    background: var(--an-accent);
+    color: var(--an-on-accent);
+  }
+
+  .filter[data-on] b {
+    color: inherit;
+    opacity: 0.7;
+  }
+
+  .cell__when {
+    font-family: var(--an-font-mono);
+    font-size-adjust: var(--an-font-mono-adjust);
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-muted);
+    white-space: nowrap;
+  }
+
+  .best {
+    display: flex;
+    align-items: center;
+    gap: var(--an-space-3);
+  }
+
+  .best__art {
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: var(--an-radius-md);
+  }
+
+  .best__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .best__title {
+    display: block;
+    font-size: var(--an-text-footnote-size);
+    font-weight: var(--an-weight-medium);
+    color: var(--an-text);
+  }
+
+  .best__meta {
+    display: block;
+    font-size: var(--an-text-caption-size);
+    color: var(--an-text-faint);
+  }
+
   /* ── Section visuals ───────────────────────────────────────────────────── */
   /* Every card in the first two sections opens with a picture of its own claim,
      drawn from tokens rather than illustrated: a month with five posts in it,
@@ -1811,6 +2056,19 @@
     padding: var(--an-space-12) var(--an-space-12) var(--an-space-12) 0;
   }
 
+  /* Desktop gives each card room to be a real screen rather than a thumbnail:
+     the surface is the argument here, and a 300px crop of it argues nothing.
+     The copy stays vertically centred against it. */
+  @media (min-width: 1000px) {
+    .feature {
+      min-height: 620px;
+    }
+
+    .feature__shot {
+      align-self: center;
+    }
+  }
+
   .feature--flip .feature__copy {
     order: 2;
   }
@@ -1970,7 +2228,7 @@
 
   .moodboard {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--an-space-2);
     padding: var(--an-space-4);
   }
@@ -2013,9 +2271,13 @@
     background: var(--an-surface);
   }
 
+  /* Positioned, because the surface glyph sits in its corner. Without this the
+     glyph escapes to the nearest positioned ancestor and lands somewhere off in
+     the card. */
   .piece__art {
+    position: relative;
     display: block;
-    height: 32px;
+    height: 46px;
   }
 
   .piece__label {
@@ -2195,7 +2457,7 @@
     display: flex;
     align-items: center;
     gap: var(--an-space-3);
-    margin: 0;
+    margin: var(--an-space-4) 0 0;
   }
 
   .loop__glyph {
