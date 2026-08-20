@@ -844,8 +844,7 @@
                       </div>
                     {/snippet}
 
-                    Here is week 34 — six pieces, balanced 42% craft, 33% proof, 25% behind the
-                    scenes. Thursday stays clear.
+                    Week 34 — six pieces, balanced 42/33/25. Thursday stays clear.
 
                     <!-- The plan arrives inside the turn, as an artifact rather
                          than as a link to somewhere else: the answer to "plan my
@@ -1644,10 +1643,14 @@
   /* Two columns: the team on the left, the conversation with one of them on the
      right. The rail is what makes the claim — the week came out of four agents
      you can each open and argue with, not out of one box that answers. */
+  /* A fixed viewport, not a container that grows to its content: the card has
+     to sit at the same height as the other three, and a conversation is
+     infinitely long by nature. It crops at the top, the way the real screen
+     does when you have been talking for a while. */
   .chat {
     display: grid;
     grid-template-columns: 190px minmax(0, 1fr);
-    min-height: 440px;
+    height: 520px;
   }
 
   .rail {
@@ -1721,15 +1724,31 @@
   }
 
   .talk {
+    position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     gap: var(--an-space-3);
+    min-height: 0;
     padding: var(--an-space-5);
+    overflow: hidden;
+  }
+
+  /* The crop gets a fade rather than a hard edge: a sentence sliced mid-line
+     reads as a rendering bug, the same sentence fading out reads as scrollback. */
+  .talk::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--an-space-16);
+    background: linear-gradient(180deg, var(--an-surface-raised), transparent);
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* The plan, delivered inside the turn. */
   .artifact {
-    margin-top: var(--an-space-4);
+    margin-top: var(--an-space-3);
     border: 1px solid var(--an-border);
     border-radius: var(--an-radius-xl);
     overflow: hidden;
@@ -1741,7 +1760,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--an-space-3);
-    padding: var(--an-space-3) var(--an-space-4);
+    padding: var(--an-space-2) var(--an-space-4);
     border-bottom: 1px solid var(--an-border);
   }
 
@@ -1751,7 +1770,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--an-space-3);
-    padding: var(--an-space-3) var(--an-space-4);
+    padding: var(--an-space-2) var(--an-space-4);
     border-top: 1px solid var(--an-border);
   }
 
@@ -1871,10 +1890,10 @@
   /* The surface each piece is cut for, on the piece itself. */
   .piece__glyph {
     position: absolute;
-    right: 2px;
-    bottom: 2px;
+    right: 1px;
+    bottom: 1px;
     display: inline-flex;
-    padding: 2px;
+    padding: 1px;
     border-radius: var(--an-radius-sm);
     background: color-mix(in srgb, var(--an-surface) 88%, transparent);
     line-height: 0;
@@ -2500,7 +2519,7 @@
     grid-template-columns: 42px minmax(0, 1fr);
     align-items: center;
     gap: var(--an-space-3);
-    padding: var(--an-space-2) var(--an-space-4);
+    padding: 2px var(--an-space-4);
     border-top: 1px solid var(--an-border);
   }
 
@@ -2524,7 +2543,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--an-space-2) var(--an-space-4);
-    min-height: 40px;
+    min-height: 32px;
   }
 
   .piece {
@@ -2537,8 +2556,8 @@
   .piece__art {
     position: relative;
     display: block;
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     flex: none;
     border-radius: var(--an-radius-md);
     overflow: hidden;
