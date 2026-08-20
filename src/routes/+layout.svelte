@@ -18,6 +18,14 @@
 
   const current = $derived($page.url.pathname);
 
+  /* One route renders without the shell: the full-screen landing mockup. A
+     landing page is judged edge to edge, and a sidebar beside it is a lie about
+     how it will be seen. Done here rather than by moving every docs route into
+     a layout group — the shell is the root layout, so a page cannot opt out of
+     it with the `@` suffix, and reshuffling the tree to allow it would touch
+     every route to serve one. */
+  const bare = $derived(current.startsWith('/showcase/landing/full'));
+
   // Close the drawer on navigation — the nav is a drawer only on phones.
   $effect(() => {
     void current;
@@ -36,6 +44,14 @@
 </script>
 
 <ThemeProvider>
+  {#if bare}
+    <!-- `.an-app` still wraps it: that class is where the library sets the
+         canvas, the type and the text colour, so a page rendered without it
+         falls back to the browser's own serif. -->
+    <div class="an-app">
+      {@render children()}
+    </div>
+  {:else}
   <div class="an-app shell" data-nav-open={navOpen ? '' : undefined}>
     <SkipLink href="#main" />
     <header class="shell__bar">
@@ -169,6 +185,7 @@
     </div>
   </div>
 
+  {/if}
   <Toaster />
 </ThemeProvider>
 
